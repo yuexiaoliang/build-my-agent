@@ -11,17 +11,31 @@ export type ChatUsage = {
   totalTokens?: number;
 };
 
-export type ChatOptions = {
-  sessionId?: string;
-  signal?: AbortSignal;
-};
-
 export type ChatResult = {
   text: string;
   model: string;
   usage: ChatUsage;
   elapsedMs: number;
   sessionId: string;
+};
+
+export type RawExchange = {
+  request: {
+    url: string;
+    model: string;
+    sessionId: string;
+    messages: ChatMessage[];
+  };
+  response: {
+    status: number;
+    elapsedMs: number;
+    bodyText: string;
+  };
+};
+
+export type ChatOptions = {
+  sessionId?: string;
+  signal?: AbortSignal;
 };
 
 type ChatCompletionBody = {
@@ -53,14 +67,14 @@ export class ModelResponseError extends Error {
   }
 }
 
-export async function chat(
+export async function sendChatRequest(
   config: ModelConfig,
   messages: ChatMessage[],
   options: ChatOptions = {},
-): Promise<ChatResult> {
+): Promise<RawExchange> {
+  const sessionId = options.sessionId ?? crypto.randomUUID();
   const url = `${config.baseUrl}/chat/completions`;
   const startedAt = Date.now();
-  const sessionId = options.sessionId ?? crypto.randomUUID();
 
   const response = await fetch(url, {
     method: "POST",
@@ -74,28 +88,42 @@ export async function chat(
     body: JSON.stringify({ model: config.model, messages }),
   });
 
-  const bodyText = await response.text();
+  return {
+    request: { url, model: config.model, sessionId, messages },
+    response: {
+      status: response.status,
+      elapsedMs: Date.now() - startedAt,
+      bodyText: await response.text(),
+    },
+  };
+}
+
+export function parseChatResponse(exchange: RawExchange): ChatResult {
+  const { status, bodyText, elapsedMs } = exchange.response;
   const body = toJson(bodyText);
 
-  if (!response.ok) {
-    throw new ModelRequestError(response.status, describeError(body, bodyText));
+  if (status < 200 || status >= 300) {
+    throw new ModelRequestError(status, describeError(body, bodyText));
+  }
+  if (body === undefined) {
+    throw new ModelResponseError(`响应不是合法 JSON：${preview(bodyText)}`);
   }
 
-  const text = body?.choices?.[0]?.message?.content;
+  const text = body.choices?.[0]?.message?.content;
   if (typeof text !== "string") {
     throw new ModelResponseError("缺少 choices[0].message.content");
   }
 
   return {
     text,
-    model: typeof body?.model === "string" ? body.model : config.model,
+    model: typeof body.model === "string" ? body.model : exchange.request.model,
     usage: {
-      promptTokens: body?.usage?.prompt_tokens,
-      completionTokens: body?.usage?.completion_tokens,
-      totalTokens: body?.usage?.total_tokens,
+      promptTokens: body.usage?.prompt_tokens,
+      completionTokens: body.usage?.completion_tokens,
+      totalTokens: body.usage?.total_tokens,
     },
-    elapsedMs: Date.now() - startedAt,
-    sessionId,
+    elapsedMs,
+    sessionId: exchange.request.sessionId,
   };
 }
 
@@ -110,7 +138,11 @@ function toJson(text: string): ChatCompletionBody | undefined {
 function describeError(body: ChatCompletionBody | undefined, raw: string): string {
   const message = body?.error?.message;
   if (typeof message === "string" && message.length > 0) return message;
-  const trimmed = raw.trim();
+  return preview(raw);
+}
+
+function preview(text: string): string {
+  const trimmed = text.trim();
   if (trimmed === "") return "（空响应体）";
-  return trimmed.length > 200 ? `${trimmed.slice(0, 200)}…` : trimmed;
+  return trimmed.length > 80 ? `${trimmed.slice(0, 80)}…` : trimmed;
 }

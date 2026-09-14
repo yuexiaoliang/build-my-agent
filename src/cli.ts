@@ -1,7 +1,9 @@
 import { loadDotEnv, readModelConfig } from "./config.ts";
-import { ModelRequestError, ModelResponseError, chat } from "./model.ts";
+import { readChatFixture, writeChatFixture } from "./fixture.ts";
+import { ModelRequestError, ModelResponseError, parseChatResponse, sendChatRequest } from "./model.ts";
+import type { ChatUsage } from "./model.ts";
 
-const [command] = process.argv.slice(2);
+const [command, ...rest] = process.argv.slice(2);
 
 switch (command) {
   case "config": {
@@ -26,9 +28,21 @@ switch (command) {
   }
 
   case "ask": {
-    const question = process.argv.slice(3).join(" ").trim();
+    const args = [...rest];
+    let recordPath: string | undefined;
+    const recordIndex = args.indexOf("--record");
+    if (recordIndex !== -1) {
+      recordPath = args[recordIndex + 1];
+      if (recordPath === undefined) {
+        console.error("--record 后面要跟一个文件路径");
+        process.exit(2);
+      }
+      args.splice(recordIndex, 2);
+    }
+
+    const question = args.join(" ").trim();
     if (question === "") {
-      console.error('用法：node src/cli.ts ask "你的问题"');
+      console.error('用法：node src/cli.ts ask [--record fixtures/xxx.json] "你的问题"');
       process.exit(2);
     }
 
@@ -48,29 +62,67 @@ switch (command) {
     console.log(`问题：${question}`);
 
     try {
-      const reply = await chat(config, [{ role: "user", content: question }], { sessionId });
-      console.log(`\n回答（服务端返回模型 ${reply.model}，耗时 ${reply.elapsedMs} ms）：\n`);
+      const exchange = await sendChatRequest(config, [{ role: "user", content: question }], { sessionId });
+      if (recordPath !== undefined) {
+        await writeChatFixture(recordPath, exchange);
+      }
+
+      const reply = parseChatResponse(exchange);
+      console.log(`\n【真实调用】回答（服务端返回模型 ${reply.model}，耗时 ${reply.elapsedMs} ms）：\n`);
       console.log(reply.text);
-      console.log(
-        `\n用量：输入 ${reply.usage.promptTokens ?? "?"} + 输出 ${reply.usage.completionTokens ?? "?"} = ${reply.usage.totalTokens ?? "?"} tokens`,
-      );
+      console.log(`\n用量：${formatUsage(reply.usage)}`);
+      if (recordPath !== undefined) {
+        console.log(`已录制到 ${recordPath}（原样保存响应体，可离线回放）`);
+      }
     } catch (error) {
-      if (error instanceof ModelRequestError) {
-        console.error(`\n请求失败：HTTP ${error.status}\n服务端信息：${error.detail}`);
-        process.exit(3);
-      }
-      if (error instanceof ModelResponseError) {
-        console.error(`\n响应无法使用：${error.detail}`);
-        process.exit(4);
-      }
-      console.error(`\n调用出错：${error instanceof Error ? error.message : String(error)}`);
-      process.exit(5);
+      fail(error);
+    }
+    break;
+  }
+
+  case "replay": {
+    const path = rest[0];
+    if (path === undefined) {
+      console.error("用法：node src/cli.ts replay fixtures/xxx.json");
+      process.exit(2);
+    }
+
+    try {
+      const fixture = await readChatFixture(path);
+      console.log(`【离线回放】${path}`);
+      console.log(`录制于 ${fixture.recordedAt}，录制时耗时 ${fixture.response.elapsedMs} ms`);
+      console.log(`原请求：POST ${fixture.request.url}（模型 ${fixture.request.model}，会话 ${fixture.request.sessionId}）`);
+      console.log("不联网、不读密钥，只走本程序的解析路径\n");
+
+      const reply = parseChatResponse(fixture);
+      console.log(`回答（来自固定响应，模型 ${reply.model}）：\n`);
+      console.log(reply.text);
+      console.log(`\n用量（固定响应中的统计）：${formatUsage(reply.usage)}`);
+    } catch (error) {
+      fail(error);
     }
     break;
   }
 
   default: {
-    console.error("用法：node src/cli.ts config | ask \"你的问题\"");
+    console.error('用法：node src/cli.ts config | ask [--record fixtures/xxx.json] "你的问题" | replay fixtures/xxx.json');
     process.exit(2);
   }
+}
+
+function formatUsage(usage: ChatUsage): string {
+  return `输入 ${usage.promptTokens ?? "?"} + 输出 ${usage.completionTokens ?? "?"} = ${usage.totalTokens ?? "?"} tokens`;
+}
+
+function fail(error: unknown): never {
+  if (error instanceof ModelRequestError) {
+    console.error(`\n请求失败：HTTP ${error.status}\n服务端信息：${error.detail}`);
+    process.exit(3);
+  }
+  if (error instanceof ModelResponseError) {
+    console.error(`\n响应无法使用：${error.detail}`);
+    process.exit(4);
+  }
+  console.error(`\n出错：${error instanceof Error ? error.message : String(error)}`);
+  process.exit(5);
 }
