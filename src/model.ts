@@ -1,4 +1,5 @@
 import type { ModelConfig } from "./config.ts";
+import type { ToolDefinition } from "./tools.ts";
 
 export type ChatMessage = {
   role: "system" | "user" | "assistant";
@@ -11,8 +12,15 @@ export type ChatUsage = {
   totalTokens?: number;
 };
 
+export type ToolCall = {
+  id: string;
+  name: string;
+  argumentsText: string;
+};
+
 export type ChatResult = {
   text: string;
+  toolCalls: ToolCall[];
   model: string;
   usage: ChatUsage;
   elapsedMs: number;
@@ -25,6 +33,7 @@ export type RawExchange = {
     model: string;
     sessionId: string;
     messages: ChatMessage[];
+    tools?: ToolDefinition[];
   };
   response: {
     status: number;
@@ -36,11 +45,17 @@ export type RawExchange = {
 export type ChatOptions = {
   sessionId?: string;
   signal?: AbortSignal;
+  tools?: ToolDefinition[];
+};
+
+type RawToolCall = {
+  id?: unknown;
+  function?: { name?: unknown; arguments?: unknown };
 };
 
 type ChatCompletionBody = {
   model?: string;
-  choices?: { message?: { content?: string } }[];
+  choices?: { message?: { content?: string | null; tool_calls?: RawToolCall[] } }[];
   usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number };
   error?: { message?: string };
 };
@@ -73,6 +88,7 @@ export async function sendChatRequest(
   options: ChatOptions = {},
 ): Promise<RawExchange> {
   const sessionId = options.sessionId ?? crypto.randomUUID();
+  const { tools } = options;
   const url = `${config.baseUrl}/chat/completions`;
   const startedAt = Date.now();
 
@@ -85,11 +101,15 @@ export async function sendChatRequest(
       "user-agent": "build-my-agent/0.1",
       "x-opencode-session": sessionId,
     },
-    body: JSON.stringify({ model: config.model, messages }),
+    body: JSON.stringify({
+      model: config.model,
+      messages,
+      ...(tools !== undefined && tools.length > 0 ? { tools } : {}),
+    }),
   });
 
   return {
-    request: { url, model: config.model, sessionId, messages },
+    request: { url, model: config.model, sessionId, messages, tools },
     response: {
       status: response.status,
       elapsedMs: Date.now() - startedAt,
@@ -109,13 +129,15 @@ export function parseChatResponse(exchange: RawExchange): ChatResult {
     throw new ModelResponseError(`响应不是合法 JSON：${preview(bodyText)}`);
   }
 
-  const text = body.choices?.[0]?.message?.content;
-  if (typeof text !== "string") {
-    throw new ModelResponseError("缺少 choices[0].message.content");
+  const message = body.choices?.[0]?.message;
+  const toolCalls = readToolCalls(message?.tool_calls);
+  if (typeof message?.content !== "string" && toolCalls.length === 0) {
+    throw new ModelResponseError("响应既没有文字内容，也没有工具调用");
   }
 
   return {
-    text,
+    text: typeof message?.content === "string" ? message.content : "",
+    toolCalls,
     model: typeof body.model === "string" ? body.model : exchange.request.model,
     usage: {
       promptTokens: body.usage?.prompt_tokens,
@@ -125,6 +147,15 @@ export function parseChatResponse(exchange: RawExchange): ChatResult {
     elapsedMs,
     sessionId: exchange.request.sessionId,
   };
+}
+
+function readToolCalls(raw: RawToolCall[] | undefined): ToolCall[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((call) => ({
+    id: typeof call.id === "string" ? call.id : "",
+    name: typeof call.function?.name === "string" ? call.function.name : "",
+    argumentsText: typeof call.function?.arguments === "string" ? call.function.arguments : "",
+  }));
 }
 
 function toJson(text: string): ChatCompletionBody | undefined {
