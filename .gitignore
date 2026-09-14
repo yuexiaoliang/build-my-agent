@@ -1,2 +1,8 @@
 # Personal learning state; public templates live in the teaching skill.
 .learning/
+
+# 学习代码
+node_modules/
+dist/
+.env
+.DS_Store
