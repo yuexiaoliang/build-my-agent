@@ -2,7 +2,7 @@ import { loadDotEnv, readModelConfig } from "./config.ts";
 import { readChatFixture, writeChatFixture } from "./fixture.ts";
 import { ModelRequestError, ModelResponseError, parseChatResponse, sendChatRequest } from "./model.ts";
 import type { ChatUsage } from "./model.ts";
-import { executeToolCall, toolDefinitions } from "./tools.ts";
+import { checkToolCall, executeToolCall, toolDefinitions } from "./tools.ts";
 
 const [command, ...rest] = process.argv.slice(2);
 
@@ -87,10 +87,15 @@ switch (command) {
         for (const call of reply.toolCalls) {
           console.log(`  - ${call.name}（id=${call.id}）参数原文：${call.argumentsText}`);
         }
-        console.log("\n【执行】（只读，sandbox/ 内）：");
+        console.log("\n【闸门与执行】（只读，sandbox/ 内）：");
         for (const call of reply.toolCalls) {
-          const output = await executeToolCall(call.name, call.argumentsText);
-          console.log(`--- ${call.name} 的结果 ---`);
+          const check = checkToolCall(call.name, call.argumentsText);
+          if (!check.ok) {
+            console.log(`--- ${call.name}：拒绝（${check.reason}）`);
+            continue;
+          }
+          const output = await executeToolCall(check.name, check.args);
+          console.log(`--- ${call.name}：执行结果 ---`);
           console.log(output);
         }
       }
@@ -141,8 +146,32 @@ switch (command) {
     break;
   }
 
+  case "call": {
+    const [name, argumentsText] = rest;
+    if (name === undefined || argumentsText === undefined) {
+      console.error('用法：node src/cli.ts call <工具名> "<参数JSON>"');
+      process.exit(2);
+    }
+
+    console.log(`【工具直调】${name}（不经过模型） 参数：${argumentsText}`);
+    const check = checkToolCall(name, argumentsText);
+    if (!check.ok) {
+      console.log(`拒绝执行：${check.reason}`);
+      process.exit(6);
+    }
+
+    try {
+      const output = await executeToolCall(check.name, check.args);
+      console.log(`--- ${check.name} 的结果 ---`);
+      console.log(output);
+    } catch (error) {
+      fail(error);
+    }
+    break;
+  }
+
   default: {
-    console.error('用法：node src/cli.ts config | ask [--tools] [--record fixtures/xxx.json] "你的问题" | replay fixtures/xxx.json');
+    console.error('用法：node src/cli.ts config | ask [--tools] [--record fixtures/xxx.json] "你的问题" | replay fixtures/xxx.json | call <工具名> "<参数JSON>"');
     process.exit(2);
   }
 }
