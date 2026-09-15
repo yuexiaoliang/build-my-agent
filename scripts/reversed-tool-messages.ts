@@ -6,8 +6,8 @@ import { ModelRequestError, parseChatResponse, sendChatRequest } from "../src/mo
 import type { ChatMessage } from "../src/model.ts";
 import { checkToolCall, executeToolCall } from "../src/tools.ts";
 
-const sourcePath = process.argv[2] ?? "fixtures/chat-2026-09-15-multitool.json";
-const recordPath = process.argv[3] ?? "fixtures/chat-2026-09-15-multitool-reversed.json";
+const sourcePath = process.argv[2] ?? "fixtures/ch03/multitool.json";
+const recordPath = process.argv[3] ?? "fixtures/ch03/multitool-reversed.json";
 
 loadDotEnv();
 const loaded = readModelConfig();

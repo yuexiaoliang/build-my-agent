@@ -20,7 +20,7 @@ const messages: ChatMessage[] = [
 
 console.log("发送 messages：user + tool（无 assistant，孤儿结果）");
 const exchange = await sendChatRequest(result.config, messages, { sessionId: crypto.randomUUID() });
-await writeChatFixture("fixtures/chat-2026-09-15-orphan-tool.json", exchange);
+await writeChatFixture("fixtures/ch03/orphan-tool.json", exchange);
 
 try {
   const reply = parseChatResponse(exchange);

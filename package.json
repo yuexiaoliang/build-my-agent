@@ -8,6 +8,7 @@
   "scripts": {
     "check": "tsc --noEmit",
     "check:tools": "bash scripts/tool-checks.sh",
+    "check:fixtures": "bash scripts/check-fixtures.sh",
     "render:diagrams": "bash scripts/render-diagrams.sh",
     "config": "node src/cli.ts config"
   },
