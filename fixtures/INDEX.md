@@ -10,6 +10,20 @@
 - fixture 是真实 API 的录制，**不可免费再生**；请求形状随 `src/model.ts` 演化后旧 fixture 可能无法回放，此时按本表"来源"列重新录制或标注失效。
 - 尚未被课程认领的录制放 `fixtures/_pending/`；认领时移入对应章节目录、更新引用与本表。
 
+## ch01 · 任务与模型
+
+| 文件 | 小节 | 用途 | 来源 |
+|---|---|---|---|
+| `fixtures/ch01/ask-success.json` | 01.3 | 真实成功调用录制（332 tokens），回放基准 | `node src/cli.ts ask --record fixtures/ch01/ask-success.json "用一句话解释：什么是 Agent 的离线回放？"` |
+| `fixtures/ch01/model-not-supported.json` | 01.2、01.3 | 未知模型的 401 原文：错误码是服务端事实；回放失败分类（退出码 3） | `MODEL_NAME=not-a-real-model node src/cli.ts ask --record fixtures/ch01/model-not-supported.json "触发一次真实失败，用于离线回放"` |
+| `fixtures/ch01/malformed-response.json` | 01.3 | 损坏响应体（单引号非法 JSON），验证退出码 4 | 手工构造，非真实录制 |
+
+## ch02 · 工具契约
+
+| 文件 | 小节 | 用途 | 来源 |
+|---|---|---|---|
+| `fixtures/ch02/toolcall.json` | 02.1 | 首个工具调用响应：`content` 为空字符串 + `tool_calls`（read_file notes.txt，416 tokens） | `node src/cli.ts ask --tools --record fixtures/ch02/toolcall.json "sandbox/notes.txt 里写了什么？"` |
+
 ## ch03 · Agent Loop
 
 | 文件 | 小节 | 用途 | 来源 |
@@ -26,11 +40,4 @@
 
 ## _pending · 待认领
 
-| 文件 | 内容 | 可能归属 |
-|---|---|---|
-| `fixtures/_pending/chat-2026-09-14.json` | 首次真实调用（单轮 user → 200） | 01.2 / 01.3 |
-| `fixtures/_pending/chat-2026-09-14-toolcall.json` | 首次带工具的调用 | 02.x |
-| `fixtures/_pending/chat-401-model-not-supported.json` | 不支持模型的 401 错误原文 | 01.2（错误码） |
-| `fixtures/_pending/chat-malformed.json` | 单引号非法 JSON 响应体（解析失败路径） | 01.3 |
-
-ch01、ch02 讲义落成时确认归属：移入对应章节目录并更新引用与本表；确认无用的直接删除。
+当前为空。今后录了暂时不属于任何小步的实验性 fixture 放这里并登记；认领时移入对应章节目录、更新引用与本表。
