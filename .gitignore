@@ -6,3 +6,6 @@ node_modules/
 dist/
 .env
 .DS_Store
+
+# 讲义图片本地预览（scripts/render-diagrams.sh 输出）
+.lesson-preview/

@@ -6,13 +6,16 @@
 
 ## 当前进度
 
-目前完成课程设计 v0.2，尚未实现 Agent、教学环境或完整教材。历史项目调研仅包含静态源码阅读，尚未完成运行验证。学习阶段尚未开始。
+课程设计 v0.2；学习进行中：第 01–02 章完成，第 03 章进行中。历史项目调研仅包含静态源码阅读，尚未完成运行验证。
 
 1. [课程蓝图](docs/course-blueprint.md)：五个阶段、32 章规格、毕业项目与教学方式。
 2. [能力与验收矩阵](docs/competency-matrix.md)：能力目标、章节、任务与证据。
 3. [学习计划](docs/learning-plan.md)：每周 10–15 小时，按阶段验收调整预算。
 4. [教学环境约定](docs/teaching-environment.md)：练习仓库、执行隔离、故障与迁移环境。
-5. [参考项目调研](docs/research/agent-landscape.md)：历史源码快照及新主线下的参考定位。
+5. [学习与操作方法](docs/learning-method.md)：每一步怎么学、怎么操作；[教学与学习原理](docs/teaching-principles.md)：教学设计的原则清单。
+6. [参考项目调研](docs/research/agent-landscape.md)：历史源码快照及新主线下的参考定位。
+
+每章讲义在开课前预写于 `docs/lessons/chNN/`（含 Mermaid 图，GitHub 直接渲染），实测结果课后回填。
 
 ## 学习方式
 

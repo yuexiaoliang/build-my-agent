@@ -8,9 +8,11 @@
   "scripts": {
     "check": "tsc --noEmit",
     "check:tools": "bash scripts/tool-checks.sh",
+    "render:diagrams": "bash scripts/render-diagrams.sh",
     "config": "node src/cli.ts config"
   },
   "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^11.17.0",
     "@types/node": "^26.5.1",
     "typescript": "^7.0.2"
   }
