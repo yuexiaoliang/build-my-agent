@@ -7,6 +7,7 @@
   },
   "scripts": {
     "check": "tsc --noEmit",
+    "check:tools": "bash scripts/tool-checks.sh",
     "config": "node src/cli.ts config"
   },
   "devDependencies": {

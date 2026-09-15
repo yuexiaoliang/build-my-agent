@@ -1,5 +1,5 @@
 import { readdir, readFile } from "node:fs/promises";
-import { isAbsolute, join, relative, resolve } from "node:path";
+import { isAbsolute, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export type ToolDefinition = {
@@ -106,6 +106,7 @@ function checkAgainstSchema(tool: ToolDefinition, args: Record<string, unknown>)
 function resolveInSandbox(path: string): string | undefined {
   const resolved = resolve(sandboxRoot, path);
   const rel = relative(sandboxRoot, resolved);
-  if (rel === "" || (!rel.startsWith("..") && !isAbsolute(rel))) return resolved;
-  return undefined;
+  if (isAbsolute(rel)) return undefined;
+  if (rel.split(sep)[0] === "..") return undefined;
+  return resolved;
 }
