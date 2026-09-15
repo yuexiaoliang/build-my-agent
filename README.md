@@ -10,7 +10,7 @@
 
 1. [课程蓝图](docs/course-blueprint.md)：五个阶段、32 章规格、毕业项目与教学方式。
 2. [能力与验收矩阵](docs/competency-matrix.md)：能力目标、章节、任务与证据。
-3. [学习计划](docs/learning-plan.md)：每周 10–15 小时，按阶段验收调整预算。
+3. [学习计划](docs/learning-plan.md)：进度按完成度百分比衡量，按阶段验收校准。
 4. [教学环境约定](docs/teaching-environment.md)：练习仓库、执行隔离、故障与迁移环境。
 5. [学习与操作方法](docs/learning-method.md)：每一步怎么学、怎么操作；[教学与学习原理](docs/teaching-principles.md)：教学设计的原则清单。
 6. [参考项目调研](docs/research/agent-landscape.md)：历史源码快照及新主线下的参考定位。
