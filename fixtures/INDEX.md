@@ -38,6 +38,21 @@
 | `fixtures/ch03/multitool-reversed.json` | 03.3 | tool 消息颠倒顺序仍被接受（id 关联定界） | `node scripts/reversed-tool-messages.ts` |
 | `fixtures/ch03/repeat-thrice.json`<br>`fixtures/ch03/repeat-thrice-round2.json`<br>`fixtures/ch03/repeat-thrice-round3.json` | 03.4 | 连续重复三级处理；用户要求重读被误伤的案例 | `node src/cli.ts ask --tools --record fixtures/ch03/repeat-thrice.json "我需要确认 sandbox/notes.txt 的内容稳定：请连续读取这个文件三次……"` |
 
+## ch04 · 消息与协议
+
+| 文件 | 小节 | 用途 | 来源 |
+|---|---|---|---|
+| `fixtures/ch04/surgery-content-null.json` | 04.1 | 手术：`message.content` 改为 `null`（`tool_calls` 保留），验证规范化 | 手工改造自 `fixtures/ch03/multitool.json`，非真实录制 |
+| `fixtures/ch04/surgery-no-id.json` | 04.1 | 手术：第一个 `tool_call` 删掉 `id`，验证缺失字段的填充与连锁影响 | 手工改造自 `fixtures/ch03/multitool.json`，非真实录制 |
+| `fixtures/ch04/surgery-extra-field.json` | 04.1 | 手术：`message` 下加协议外字段，验证丢弃行为 | 手工改造自 `fixtures/ch03/multitool.json`，非真实录制 |
+| `fixtures/ch04/surgery-finish-length.json` | 04.2 | 手术：`finish_reason` 改为 `length`，对照截断标注行为 | 手工改造自 `fixtures/ch01/ask-success.json`，非真实录制 |
+| `fixtures/ch04/surgery-toolcall-no-name.json` | 04.3 | 手术：工具名缺失，校验分级用例 | 手工改造自 `fixtures/ch03/multitool.json`，非真实录制 |
+| `fixtures/ch04/surgery-arguments-object.json` | 04.3 | 手术：`arguments` 是对象而非字符串（提供商协议真实差异），校验分级用例 | 手工改造自 `fixtures/ch03/multitool.json`，非真实录制 |
+| `fixtures/ch04/surgery-empty-choices.json` | 04.3 | 手术：`choices` 为空数组，校验分级用例 | 手工改造自 `fixtures/ch01/ask-success.json`，非真实录制 |
+| `fixtures/ch04/anthropic-shaped.json` | 04.4 | Anthropic Messages 形状合成响应，观察协议相异时的失败等级 | 手工合成（外壳沿用 `kind: chat-http`），非真实录制 |
+| `fixtures/ch04/empty-id-roundtrip.json` | 04.1 | 空 id 回填实验：HTTP 400（服务端报错为须回传 `reasoning_content`） | `node scripts/empty-id-roundtrip.ts` |
+| `fixtures/ch04/valid-id-roundtrip.json` | 04.1 | 单变量对照：正常 id 同样 400、同报错 → id 不是两次结果的差异变量 | `node scripts/valid-id-roundtrip.ts` |
+
 ## _pending · 待认领
 
 当前为空。今后录了暂时不属于任何小步的实验性 fixture 放这里并登记；认领时移入对应章节目录、更新引用与本表。
