@@ -1,0 +1,26 @@
+{
+  "kind": "chat-http",
+  "version": 1,
+  "recordedAt": "2026-09-15T07:32:35.113Z",
+  "request": {
+    "url": "https://opencode.ai/zen/go/v1/chat/completions",
+    "model": "deepseek-v4.1-flash",
+    "sessionId": "12af1e93-f656-4f40-8626-b560e62b77a0",
+    "messages": [
+      {
+        "role": "user",
+        "content": "sandbox 里的 notes.txt 写了什么？"
+      },
+      {
+        "role": "tool",
+        "toolCallId": "call_orphan_000",
+        "content": "练习用笔记（合成文件，不是真实项目）"
+      }
+    ]
+  },
+  "response": {
+    "status": 400,
+    "elapsedMs": 3959,
+    "bodyText": "{\"error\":{\"param\":null,\"type\":\"invalid_request_error\",\"code\":\"invalid_request_error\",\"message\":\"Error from provider (Console Go): Upstream request failed: [invalid_request_error] Messages with role 'tool' must be a response to a preceding message with 'tool_calls'\"}}"
+  }
+}

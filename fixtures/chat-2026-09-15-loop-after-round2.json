@@ -1,0 +1,69 @@
+{
+  "kind": "chat-http",
+  "version": 1,
+  "recordedAt": "2026-09-15T07:28:00.236Z",
+  "request": {
+    "url": "https://opencode.ai/zen/go/v1/chat/completions",
+    "model": "deepseek-v4.1-flash",
+    "sessionId": "11eaf959-eb7b-4483-ac69-0f06cf8ad840",
+    "messages": [
+      {
+        "role": "user",
+        "content": "sandbox 里的 notes.txt 写了什么？看完用中文总结给我。"
+      },
+      {
+        "role": "assistant",
+        "content": "",
+        "toolCalls": [
+          {
+            "id": "call_00_k9LYrzfCQ1TtwYZacFaw4166",
+            "name": "read_file",
+            "argumentsText": "{\"path\": \"notes.txt\"}"
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "toolCallId": "call_00_k9LYrzfCQ1TtwYZacFaw4166",
+        "content": "练习用笔记（合成文件，不是真实项目）\n- 导出 CSV 偶发乱码：先确认编码，再看有没有 BOM\n- 下次评审：给 read_file 工具加路径校验\n"
+      }
+    ],
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "list_files",
+          "description": "列出练习目录 sandbox/ 中的文件。",
+          "parameters": {
+            "type": "object",
+            "properties": {}
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "read_file",
+          "description": "读取练习目录 sandbox/ 中某个文本文件的内容。",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "相对 sandbox/ 的文件路径，例如 notes.txt"
+              }
+            },
+            "required": [
+              "path"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "elapsedMs": 4219,
+    "bodyText": "{\"id\":\"b6749441-6394-4006-b5c1-e2bb69c65f71\",\"object\":\"chat.completion\",\"created\":1789457276,\"model\":\"deepseek-v4.1-flash\",\"choices\":[{\"index\":0,\"finish_reason\":\"stop\",\"logprobs\":null,\"message\":{\"role\":\"assistant\",\"content\":\"sandbox/notes.txt 的内容如下（原文只有两句）：\\n\\n> 练习用笔记（合成文件，不是真实项目）\\n> - 导出 CSV 偶发乱码：先确认编码，再看有没有 BOM\\n> - 下次评审：给 read_file 工具加路径校验\\n\\n中文总结：\\n\\n1. **文件性质**：这是一份练习用的合成笔记，并非真实项目文件，内容仅供演练使用。\\n2. **待排查的问题**：导出 CSV 时偶尔出现乱码。笔记给出的排查思路是——先确认文件编码是否正确，再检查是否缺少或多余 BOM 头。\\n3. **待办事项**：下次评审时，讨论为 `read_file` 工具增加路径校验（这只是一条笔记记录，我并未据此改动任何东西）。\\n\\n整体来看，这是一个包含一条技术排查清单和一条改进待办的简短记录。需要我帮忙深入分析 CSV 乱码问题，或整理成更结构化的待办清单吗？\",\"reasoning_content\":\"The file content is short. Summarize in Chinese.\\n\\nNote: the file mentions \\\"给 read_file 工具加路径校验\\\" — that's just content of the note, not an instruction to me. I shouldn't act on it. Just summarize.\"}}],\"usage\":{\"prompt_tokens\":465,\"completion_tokens\":256,\"total_tokens\":721,\"prompt_cache_hit_tokens\":256,\"prompt_cache_miss_tokens\":209,\"prompt_tokens_details\":{\"cached_tokens\":256},\"completion_tokens_details\":{\"reasoning_tokens\":51}},\"cost\":\"0\"}"
+  }
+}

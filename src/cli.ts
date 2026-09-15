@@ -1,7 +1,7 @@
 import { loadDotEnv, readModelConfig } from "./config.ts";
 import { readChatFixture, writeChatFixture } from "./fixture.ts";
 import { ModelRequestError, ModelResponseError, parseChatResponse, sendChatRequest } from "./model.ts";
-import type { ChatUsage } from "./model.ts";
+import type { ChatMessage, ChatUsage } from "./model.ts";
 import { checkToolCall, executeToolCall, toolDefinitions } from "./tools.ts";
 
 const [command, ...rest] = process.argv.slice(2);
@@ -78,7 +78,7 @@ switch (command) {
       }
 
       const reply = parseChatResponse(exchange);
-      console.log(`\n【真实调用】服务端返回模型 ${reply.model}，耗时 ${reply.elapsedMs} ms`);
+      console.log(`\n【真实调用·第一轮】服务端返回模型 ${reply.model}，耗时 ${reply.elapsedMs} ms`);
       if (reply.text !== "") {
         console.log(`\n${reply.text}`);
       }
@@ -87,17 +87,51 @@ switch (command) {
         for (const call of reply.toolCalls) {
           console.log(`  - ${call.name}（id=${call.id}）参数原文：${call.argumentsText}`);
         }
+
         console.log("\n【闸门与执行】（只读，sandbox/ 内）：");
+        const toolMessages: ChatMessage[] = [];
         for (const call of reply.toolCalls) {
           const check = checkToolCall(call.name, call.argumentsText);
+          let content: string;
           if (!check.ok) {
-            console.log(`--- ${call.name}：拒绝（${check.reason}）`);
-            continue;
+            content = `已拒绝：${check.reason}`;
+            console.log(`--- ${call.name}：拒绝（${check.reason}），拒绝原因也会作为结果回填`);
+          } else {
+            content = await executeToolCall(check.name, check.args);
+            console.log(`--- ${call.name}：执行结果 ---`);
+            console.log(content);
           }
-          const output = await executeToolCall(check.name, check.args);
-          console.log(`--- ${call.name}：执行结果 ---`);
-          console.log(output);
+          toolMessages.push({ role: "tool", toolCallId: call.id, content });
         }
+
+        const messages: ChatMessage[] = [
+          { role: "user", content: question },
+          { role: "assistant", content: reply.text, toolCalls: reply.toolCalls },
+          ...toolMessages,
+        ];
+        console.log("\n【结果回填·第二轮请求】messages 现在包含：");
+        for (const message of messages) {
+          const extra = message.role === "tool" ? `，tool_call_id=${message.toolCallId}` : "";
+          console.log(`  - ${message.role}${extra}（${message.content.length} 字符）`);
+        }
+
+        const secondExchange = await sendChatRequest(config, messages, { sessionId, tools });
+        if (recordPath !== undefined) {
+          const round2Path = recordPath.replace(/\.json$/, "") + "-round2.json";
+          await writeChatFixture(round2Path, secondExchange);
+        }
+        const second = parseChatResponse(secondExchange);
+        console.log(`\n【真实调用·第二轮】服务端返回模型 ${second.model}，耗时 ${second.elapsedMs} ms`);
+        if (second.text !== "") {
+          console.log(`\n${second.text}`);
+        }
+        if (second.toolCalls.length > 0) {
+          console.log("\n模型还想继续调用工具（有界循环留到 03.2，本轮到此停止）：");
+          for (const call of second.toolCalls) {
+            console.log(`  - ${call.name}（id=${call.id}）参数原文：${call.argumentsText}`);
+          }
+        }
+        console.log(`\n第二轮用量：${formatUsage(second.usage)}`);
       }
       console.log(`\n用量：${formatUsage(reply.usage)}`);
       if (recordPath !== undefined) {

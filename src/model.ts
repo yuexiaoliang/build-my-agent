@@ -1,10 +1,10 @@
 import type { ModelConfig } from "./config.ts";
 import type { ToolDefinition } from "./tools.ts";
 
-export type ChatMessage = {
-  role: "system" | "user" | "assistant";
-  content: string;
-};
+export type ChatMessage =
+  | { role: "system" | "user"; content: string }
+  | { role: "assistant"; content: string; toolCalls?: ToolCall[] }
+  | { role: "tool"; toolCallId: string; content: string };
 
 export type ChatUsage = {
   promptTokens?: number;
@@ -103,7 +103,7 @@ export async function sendChatRequest(
     },
     body: JSON.stringify({
       model: config.model,
-      messages,
+      messages: messages.map(toWireMessage),
       ...(tools !== undefined && tools.length > 0 ? { tools } : {}),
     }),
   });
@@ -147,6 +147,26 @@ export function parseChatResponse(exchange: RawExchange): ChatResult {
     elapsedMs,
     sessionId: exchange.request.sessionId,
   };
+}
+
+function toWireMessage(message: ChatMessage): Record<string, unknown> {
+  switch (message.role) {
+    case "assistant": {
+      const wire: Record<string, unknown> = { role: "assistant", content: message.content };
+      if (message.toolCalls !== undefined && message.toolCalls.length > 0) {
+        wire.tool_calls = message.toolCalls.map((call) => ({
+          id: call.id,
+          type: "function",
+          function: { name: call.name, arguments: call.argumentsText },
+        }));
+      }
+      return wire;
+    }
+    case "tool":
+      return { role: "tool", tool_call_id: message.toolCallId, content: message.content };
+    default:
+      return { role: message.role, content: message.content };
+  }
 }
 
 function readToolCalls(raw: RawToolCall[] | undefined): ToolCall[] {
