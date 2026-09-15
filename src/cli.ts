@@ -89,10 +89,13 @@ switch (command) {
 
     try {
       const messages: ChatMessage[] = [{ role: "user", content: question }];
-      const seenCalls = new Map<string, number>();
+      const firstSeenStep = new Map<string, number>();
+      let lastSignature: string | undefined;
+      let repeatStreak = 0;
       const totals = { prompt: 0, completion: 0 };
       let steps = 0;
-      let exhausted = false;
+      let stopReason: "done" | "exhausted" | "repeat" = "done";
+      let repeatStop: { name: string; streak: number; firstStep: number } | undefined;
 
       const requestRound = async (step: number): Promise<ChatResult> => {
         try {
@@ -126,26 +129,55 @@ switch (command) {
           break;
         }
 
-        console.log("\n模型请求调用工具：");
-        for (const call of reply.toolCalls) {
+        const decisions = reply.toolCalls.map((call) => {
           const signature = `${call.name}(${call.argumentsText})`;
-          const firstSeen = seenCalls.get(signature);
-          if (firstSeen === undefined) {
-            seenCalls.set(signature, step);
+          repeatStreak = signature === lastSignature ? repeatStreak + 1 : 1;
+          lastSignature = signature;
+          const firstStep = firstSeenStep.get(signature) ?? step;
+          if (!firstSeenStep.has(signature)) {
+            firstSeenStep.set(signature, step);
           }
-          const repeat = firstSeen === undefined ? "" : `  ← 与第 ${firstSeen} 轮相同（重复调用）`;
-          console.log(`  - [index=${call.index}] ${call.name}（id=${call.id}）参数原文：${call.argumentsText}${repeat}`);
+          return { call, signature, streak: repeatStreak, firstStep, action: repeatAction(repeatStreak) };
+        });
+
+        console.log("\n模型请求调用工具：");
+        for (const { call, streak, firstStep, action } of decisions) {
+          const note =
+            action === "run"
+              ? ""
+              : action === "annotate"
+                ? `  ← 与第 ${firstStep} 轮相同（连续第 ${streak} 次，回填时加提示）`
+                : `  ← 连续第 ${streak} 次相同，停止执行`;
+          console.log(`  - [index=${call.index}] ${call.name}（id=${call.id}）参数原文：${call.argumentsText}${note}`);
         }
 
-        if (step === maxSteps) {
-          exhausted = true;
+        const stopDecision = decisions.find((decision) => decision.action === "stop");
+        if (stopDecision !== undefined) {
+          stopReason = "repeat";
+          repeatStop = {
+            name: `${stopDecision.call.name}(${stopDecision.call.argumentsText})`,
+            streak: stopDecision.streak,
+            firstStep: stopDecision.firstStep,
+          };
+        }
+
+        if (step === maxSteps && stopDecision === undefined) {
+          stopReason = "exhausted";
           console.log(`\n步数上限 ${maxSteps} 已用尽：本轮的 ${reply.toolCalls.length} 个工具请求不执行，也不再发起下一轮请求。`);
           break;
         }
 
         console.log("\n【闸门与执行】（只读，sandbox/ 内）：");
         const toolMessages: ChatMessage[] = [];
-        for (const call of reply.toolCalls) {
+        for (const decision of decisions) {
+          const { call, streak, firstStep, action } = decision;
+          if (action === "stop") {
+            const fill = `已停止执行：同一调用连续重复（第 ${streak} 次，与第 ${firstStep} 轮完全相同）`;
+            console.log(`--- ${call.name}：连续重复，不执行。记录进转录的说明：「${fill}」`);
+            console.log("（没有下一轮请求，这条说明到不了模型；它留在转录、录制与这里的输出里供人查看。）");
+            toolMessages.push({ role: "tool", toolCallId: call.id, content: fill });
+            break;
+          }
           const check = checkToolCall(call.name, call.argumentsText);
           let content: string;
           if (!check.ok) {
@@ -153,16 +185,28 @@ switch (command) {
             console.log(`--- ${call.name}：拒绝（${check.reason}），拒绝原因也会作为结果回填`);
           } else {
             content = await executeToolCall(check.name, check.args);
-            console.log(`--- ${call.name}：执行结果 ---`);
+            if (action === "annotate") {
+              content = `（提示：本次调用与第 ${firstStep} 轮完全相同）\n${content}`;
+              console.log(`--- ${call.name}：执行结果（与第 ${firstStep} 轮相同，已加提示回填）---`);
+            } else {
+              console.log(`--- ${call.name}：执行结果 ---`);
+            }
             console.log(content);
           }
           toolMessages.push({ role: "tool", toolCallId: call.id, content });
         }
         messages.push({ role: "assistant", content: reply.text, toolCalls: reply.toolCalls }, ...toolMessages);
+        if (stopReason === "repeat") {
+          break;
+        }
       }
 
       console.log(`\n【结果】跑了 ${steps} 步（上限 ${maxSteps}）；累计输入 ${totals.prompt} + 输出 ${totals.completion} tokens`);
-      if (exhausted) {
+      if (stopReason === "repeat" && repeatStop !== undefined) {
+        console.log(
+          `停止原因：连续重复——${repeatStop.name} 已连续出现 ${repeatStop.streak} 次（首次在第 ${repeatStop.firstStep} 轮）；本轮未执行，也未发起下一轮请求。`,
+        );
+      } else if (stopReason === "exhausted") {
         console.log("停止原因：步数耗尽——模型仍有未执行的工具请求（上方已列出）。");
       } else {
         console.log("停止原因：模型不再请求工具，循环自然结束。");
@@ -261,6 +305,13 @@ function describeMessages(messages: ChatMessage[]): string {
 
 function shortId(id: string): string {
   return id.length > 14 ? `${id.slice(0, 12)}…` : id;
+}
+
+// 分级重复处理（03.4）：第 1 次照常；连续第 2 次执行并加提示；连续第 3 次起停止。
+function repeatAction(streak: number): "run" | "annotate" | "stop" {
+  if (streak <= 1) return "run";
+  if (streak === 2) return "annotate";
+  return "stop";
 }
 
 function withStep(step: number, error: unknown): unknown {
