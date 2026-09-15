@@ -16,6 +16,7 @@ export type ToolCall = {
   id: string;
   name: string;
   argumentsText: string;
+  index?: number;
 };
 
 export type ChatResult = {
@@ -49,6 +50,7 @@ export type ChatOptions = {
 };
 
 type RawToolCall = {
+  index?: unknown;
   id?: unknown;
   function?: { name?: unknown; arguments?: unknown };
 };
@@ -171,10 +173,11 @@ function toWireMessage(message: ChatMessage): Record<string, unknown> {
 
 function readToolCalls(raw: RawToolCall[] | undefined): ToolCall[] {
   if (!Array.isArray(raw)) return [];
-  return raw.map((call) => ({
+  return raw.map((call, position) => ({
     id: typeof call.id === "string" ? call.id : "",
     name: typeof call.function?.name === "string" ? call.function.name : "",
     argumentsText: typeof call.function?.arguments === "string" ? call.function.arguments : "",
+    index: typeof call.index === "number" ? call.index : position,
   }));
 }
 

@@ -134,7 +134,7 @@ switch (command) {
             seenCalls.set(signature, step);
           }
           const repeat = firstSeen === undefined ? "" : `  ← 与第 ${firstSeen} 轮相同（重复调用）`;
-          console.log(`  - ${call.name}（id=${call.id}）参数原文：${call.argumentsText}${repeat}`);
+          console.log(`  - [index=${call.index}] ${call.name}（id=${call.id}）参数原文：${call.argumentsText}${repeat}`);
         }
 
         if (step === maxSteps) {
@@ -200,7 +200,7 @@ switch (command) {
       if (reply.toolCalls.length > 0) {
         console.log("模型请求调用工具（回放不执行）：");
         for (const call of reply.toolCalls) {
-          console.log(`  - ${call.name}（id=${call.id}）参数原文：${call.argumentsText}`);
+          console.log(`  - [index=${call.index}] ${call.name}（id=${call.id}）参数原文：${call.argumentsText}`);
         }
         console.log();
       }
