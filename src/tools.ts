@@ -1,3 +1,7 @@
+import { readdir, readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+
 export type ToolDefinition = {
   type: "function";
   function: {
@@ -35,3 +39,21 @@ export const toolDefinitions: ToolDefinition[] = [
     },
   },
 ];
+
+const sandboxRoot = fileURLToPath(new URL("../sandbox/", import.meta.url));
+
+export async function executeToolCall(name: string, argumentsText: string): Promise<string> {
+  switch (name) {
+    case "list_files": {
+      const entries = await readdir(sandboxRoot, { withFileTypes: true });
+      return entries.map((entry) => (entry.isDirectory() ? `${entry.name}/` : entry.name)).join("\n");
+    }
+    case "read_file": {
+      const args = JSON.parse(argumentsText) as { path?: unknown };
+      const path = typeof args?.path === "string" ? args.path : "";
+      return await readFile(join(sandboxRoot, path), "utf8");
+    }
+    default:
+      throw new Error(`未知工具：${name}`);
+  }
+}

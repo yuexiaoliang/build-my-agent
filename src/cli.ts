@@ -2,7 +2,7 @@ import { loadDotEnv, readModelConfig } from "./config.ts";
 import { readChatFixture, writeChatFixture } from "./fixture.ts";
 import { ModelRequestError, ModelResponseError, parseChatResponse, sendChatRequest } from "./model.ts";
 import type { ChatUsage } from "./model.ts";
-import { toolDefinitions } from "./tools.ts";
+import { executeToolCall, toolDefinitions } from "./tools.ts";
 
 const [command, ...rest] = process.argv.slice(2);
 
@@ -67,7 +67,7 @@ switch (command) {
     console.log(`模型：${config.model}`);
     console.log(`会话：${sessionId}`);
     if (tools !== undefined) {
-      console.log(`工具：${tools.map((tool) => tool.function.name).join("、")}（本步只观察模型怎么请求，不执行）`);
+      console.log(`工具：${tools.map((tool) => tool.function.name).join("、")}（在 sandbox/ 内只读执行）`);
     }
     console.log(`问题：${question}`);
 
@@ -83,9 +83,15 @@ switch (command) {
         console.log(`\n${reply.text}`);
       }
       if (reply.toolCalls.length > 0) {
-        console.log("\n模型请求调用工具（本步不执行）：");
+        console.log("\n模型请求调用工具：");
         for (const call of reply.toolCalls) {
           console.log(`  - ${call.name}（id=${call.id}）参数原文：${call.argumentsText}`);
+        }
+        console.log("\n【执行】（只读，sandbox/ 内）：");
+        for (const call of reply.toolCalls) {
+          const output = await executeToolCall(call.name, call.argumentsText);
+          console.log(`--- ${call.name} 的结果 ---`);
+          console.log(output);
         }
       }
       console.log(`\n用量：${formatUsage(reply.usage)}`);
