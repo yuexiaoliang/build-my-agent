@@ -29,7 +29,7 @@
 
 仓库内置 [agent-harness-tutor 教学 Skill](.agents/skills/agent-harness-tutor/SKILL.md) 和 [项目教学规则](AGENTS.md)。在支持仓库 Skills 的 Codex 环境中可直接说“开始第一课”，或显式使用 `$agent-harness-tutor`。若尚未被发现，可要求 AI 读取上述 Skill 文件；其他客户端是否自动加载取决于其支持情况。
 
-公开仓库提供[个人学习记录模板](.agents/skills/agent-harness-tutor/assets/learning-state-template.md)与[教学审阅案例](.agents/skills/agent-harness-tutor/references/teaching-review.md)。个人进度保存在 Git 忽略的 `.learning/`，跨机器需自行转移或提供摘要。教学质量将通过实际试教迭代，不能由安装 Skill 推定效果。
+本仓库是基于 AI 指导的个人学习过程记录：个人进度、复习卡与判断保存在 `.learning/` 并随仓库公开，跨机器直接克隆。另提供[个人学习记录模板](.agents/skills/agent-harness-tutor/assets/learning-state-template.md)与[教学审阅案例](.agents/skills/agent-harness-tutor/references/teaching-review.md)。教学质量将通过实际试教迭代，不能由安装 Skill 推定效果。
 
 ## 开源准备
 
