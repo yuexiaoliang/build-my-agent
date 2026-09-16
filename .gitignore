@@ -1,4 +1,7 @@
+# 本地学习过程中才会按需创建这些内容
 node_modules/
+dist/
+coverage/
 .env
 .env.*
 !.env.example
