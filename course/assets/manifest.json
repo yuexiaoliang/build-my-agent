@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "kind": "original-mechanism-illustrations",
+  "renderer": "CairoSVG 2.8.2 + Pillow monochrome",
+  "images": [
+    {
+      "id": "flow",
+      "source": "course/assets/flow.svg",
+      "image": "course/assets/flow.png",
+      "sourceHash": "3e2ccff8e13642fe9b98d9e7646e74dea68566e75b8e145fb33b2dbde3ffdd57",
+      "imageHash": "9d2f91f37ed4e3dfbcea3639eec88292b564fbf8f1b678972a97bc773fe28e2f",
+      "width": 520,
+      "height": 650
+    },
+    {
+      "id": "evidence",
+      "source": "course/assets/evidence.svg",
+      "image": "course/assets/evidence.png",
+      "sourceHash": "3a08baff8f0e16b7cb705c8bff432d6b13701d44ab25b85908a6a51b545705e7",
+      "imageHash": "d3936b3a9937756b8fca2b494b5df3d45d55ab25c42a14d95a46cdcceb9aeb37",
+      "width": 520,
+      "height": 570
+    }
+  ]
+}

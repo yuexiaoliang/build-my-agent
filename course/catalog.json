@@ -1,0 +1,290 @@
+{
+  "version": 1,
+  "stages": [
+    {
+      "id": "S1",
+      "title": "做通一个可观察的 AI 功能",
+      "exit": "分清界面、服务端、模型与依据；完成一个小变化并解释。"
+    },
+    {
+      "id": "S2",
+      "title": "构建自己的最小 Harness",
+      "exit": "自己的实现通过正常链与边界反例，而不是只运行参考代码。"
+    },
+    {
+      "id": "S3",
+      "title": "让执行可控可信",
+      "exit": "能够约束有副作用任务，解释真实状态和恢复边界。"
+    },
+    {
+      "id": "S4",
+      "title": "处理复杂任务并做实验",
+      "exit": "用证据解释上下文、规划和模型/系统取舍。"
+    },
+    {
+      "id": "S5",
+      "title": "交付 Web 作品与独立迁移",
+      "exit": "在陌生需求中主导判断，完成可运行与可解释的作品。"
+    }
+  ],
+  "units": [
+    {
+      "id": "S1.1",
+      "stage": "S1",
+      "title": "回答从哪里来",
+      "status": "ready",
+      "requires": [],
+      "purpose": "看到一条完整数据链，不先背术语。",
+      "activity": "在 normal 场景沿 testing 结果追踪到下一轮 messages。",
+      "acceptance": "能指出模型请求、实际执行与来源检查分别发生在哪里。",
+      "material": "course/units/S1.1.md"
+    },
+    {
+      "id": "S1.2",
+      "stage": "S1",
+      "title": "界面开关不是执行边界",
+      "status": "ready",
+      "requires": [
+        "S1.1"
+      ],
+      "purpose": "把前端交互连接到服务端的实际决定。",
+      "activity": "关闭工具后运行；再用最后一轮预算观察没有执行。",
+      "acceptance": "能说明前端表示意图，服务端仍必须实施限制；不把演示开关当企业授权。",
+      "material": "course/units/S1.2.md"
+    },
+    {
+      "id": "S1.3",
+      "stage": "S1",
+      "title": "结束了，还是完成了",
+      "status": "ready",
+      "requires": [
+        "S1.2"
+      ],
+      "purpose": "用失败与取消理解状态不是一个布尔值。",
+      "activity": "比较 unsupported、truncated、slow；观察取消确认。",
+      "acceptance": "能区分 answered、matched、cancelled 与自己的理解证据。",
+      "material": "course/units/S1.3.md"
+    },
+    {
+      "id": "S1.4",
+      "stage": "S1",
+      "title": "这个任务真的需要 Agent 吗",
+      "status": "ready",
+      "requires": [
+        "S1.3"
+      ],
+      "purpose": "不为技术兴趣给简单需求增加复杂度。",
+      "activity": "比较已知 testing 查询的规则方案与动态调查方案，做一处可解释小改动。",
+      "acceptance": "能解释为何固定查询可以不用 Agent，保留证据与失败边界。",
+      "material": "course/units/S1.4.md"
+    },
+    {
+      "id": "S2.1",
+      "stage": "S2",
+      "title": "从一条输入输出契约开始",
+      "status": "planned",
+      "requires": [
+        "S1.4"
+      ],
+      "purpose": "让类型、实际数据和错误边界对应。",
+      "activity": "在 harness/ 创建自己的消息与响应契约，用有效/畸形输入测试。",
+      "acceptance": "无效输入显式失败，类型声明不能冒充运行时校验。",
+      "material": "course/future-units.md"
+    },
+    {
+      "id": "S2.2",
+      "stage": "S2",
+      "title": "工具请求怎样成为合法动作",
+      "status": "planned",
+      "requires": [
+        "S2.1"
+      ],
+      "purpose": "分离提议、校验、启用范围和执行。",
+      "activity": "自建只读工具集合；给未知工具、坏参数、无权限请求。",
+      "acceptance": "未许可动作不执行，拒绝有依据，工具结果关联回正确请求。",
+      "material": "course/future-units.md"
+    },
+    {
+      "id": "S2.3",
+      "stage": "S2",
+      "title": "循环、预算与停止",
+      "status": "planned",
+      "requires": [
+        "S2.2"
+      ],
+      "purpose": "组合策略仍须遵守执行契约。",
+      "activity": "自建最小循环；用最后一轮+三重复请求的组合反例验证。",
+      "acceptance": "轮数与工具预算分别受控，已执行/未执行报告真实。",
+      "material": "course/future-units.md"
+    },
+    {
+      "id": "S2.4",
+      "stage": "S2",
+      "title": "可复现的结果与协议对照",
+      "status": "planned",
+      "requires": [
+        "S2.3"
+      ],
+      "purpose": "让运行和检查可以独立复核。",
+      "activity": "记录独立 run id、消息、终态；比较一个实际可用接口或已注明的合成协议。",
+      "acceptance": "旧证据不可覆盖；解析回放与完整循环测试分别说明。",
+      "material": "course/future-units.md"
+    },
+    {
+      "id": "S3.1",
+      "stage": "S3",
+      "title": "授权与受控编辑",
+      "status": "planned",
+      "requires": [
+        "S2.4"
+      ],
+      "purpose": "允许某个动作，不等于允许之后所有动作。",
+      "activity": "预置独立工作区，审批绑定具体参数和内容版本，再实现受限补丁。",
+      "acceptance": "参数变化需重新决定；路径、符号链接与执行隔离不混淆。",
+      "material": "course/future-units.md"
+    },
+    {
+      "id": "S3.2",
+      "stage": "S3",
+      "title": "流式与取消传播",
+      "status": "planned",
+      "requires": [
+        "S3.1"
+      ],
+      "purpose": "前端停止显示不等于后台停止工作。",
+      "activity": "在自己的实现接入增量响应、输出限制和取消；加入慢消费者与超时场景。",
+      "acceptance": "取消后无新动作，无法终止者标状态未知；不能伪称回滚。",
+      "material": "course/future-units.md"
+    },
+    {
+      "id": "S3.3",
+      "stage": "S3",
+      "title": "记录与恢复",
+      "status": "planned",
+      "requires": [
+        "S3.2"
+      ],
+      "purpose": "日志里的成功与环境里的结果可能不同。",
+      "activity": "模拟动作成功但确认丢失，核对环境再决定恢复或人工处理。",
+      "acceptance": "不盲目重试副作用，记录幂等边界与无法确定的状态。",
+      "material": "course/future-units.md"
+    },
+    {
+      "id": "S3.4",
+      "stage": "S3",
+      "title": "独立结果核验",
+      "status": "planned",
+      "requires": [
+        "S3.3"
+      ],
+      "purpose": "测试通过不是需求完成的全部证据。",
+      "activity": "在隔离环境修复小缺陷，核对补丁范围、测试、工作区和需求。",
+      "acceptance": "拒绝修改评分器冒充成功，说明哪些检查不能覆盖。",
+      "material": "course/future-units.md"
+    },
+    {
+      "id": "S4.1",
+      "stage": "S4",
+      "title": "检索与上下文选择",
+      "status": "planned",
+      "requires": [
+        "S3.4"
+      ],
+      "purpose": "把必要资料提供给模型，而不是一次塞整个仓库。",
+      "activity": "先做文本搜索基线，再选择片段并记录来源/截断边界。",
+      "acceptance": "信息缺失时补检索或承认限制；不把外部文本当授权指令。",
+      "material": "course/future-units.md"
+    },
+    {
+      "id": "S4.2",
+      "stage": "S4",
+      "title": "压缩、任务状态与记忆",
+      "status": "planned",
+      "requires": [
+        "S4.1"
+      ],
+      "purpose": "省下的上下文可能包含关键约束。",
+      "activity": "比较原文、摘要和回取；区分当前任务状态与跨任务记忆。",
+      "acceptance": "测试约束丢失、过期和污染，缓存指标只报实际可观察值。",
+      "material": "course/future-units.md"
+    },
+    {
+      "id": "S4.3",
+      "stage": "S4",
+      "title": "规划、委派与扩展",
+      "status": "planned",
+      "requires": [
+        "S4.2"
+      ],
+      "purpose": "复杂性增加之前先证明需要。",
+      "activity": "同一任务比较简单循环、固定流程和有限委派；按需接入 MCP。",
+      "acceptance": "解释输入输出、预算与取消边界；多 Agent 无收益也可合格。",
+      "material": "course/future-units.md"
+    },
+    {
+      "id": "S4.4",
+      "stage": "S4",
+      "title": "评测、消融与性能",
+      "status": "planned",
+      "requires": [
+        "S4.3"
+      ],
+      "purpose": "一次看起来更好不构成收益证据。",
+      "activity": "固定任务和预算，重复比较一个策略；校验评分器与保留任务。",
+      "acceptance": "报告样本、失败、费用或用量和不确定性；不伪造显著提升。",
+      "material": "course/future-units.md"
+    },
+    {
+      "id": "S5.1",
+      "stage": "S5",
+      "title": "把控制能力做进界面",
+      "status": "planned",
+      "requires": [
+        "S4.4"
+      ],
+      "purpose": "让使用者理解正在发生什么和可以控制什么。",
+      "activity": "为自己的 Harness 做运行轨迹、审批、停止、结果审阅和故障反馈。",
+      "acceptance": "端到端验证，界面不把请求取消或网络断开当后台确认。",
+      "material": "course/future-units.md"
+    },
+    {
+      "id": "S5.2",
+      "stage": "S5",
+      "title": "配置、部署与维护",
+      "status": "planned",
+      "requires": [
+        "S5.1"
+      ],
+      "purpose": "别人能启动、定位和安全使用，才算可交付。",
+      "activity": "准备配置诊断、发布与回归；实际选一种部署环境。",
+      "acceptance": "密钥留服务端；多用户先补认证、配额和隔离；未验证平台写清。",
+      "material": "course/future-units.md"
+    },
+    {
+      "id": "S5.3",
+      "stage": "S5",
+      "title": "迁移到一个新需求",
+      "status": "planned",
+      "requires": [
+        "S5.2"
+      ],
+      "purpose": "把可复用机制与领域约束分开。",
+      "activity": "先调研具体流程，再比较规则/AI 辅助/工作流/Agent，选择一项迁移。",
+      "acceptance": "允许不用 Agent；给出约束、最小验证和退出条件，不冒充行业专家。",
+      "material": "course/future-units.md"
+    },
+    {
+      "id": "S5.4",
+      "stage": "S5",
+      "title": "技术答辩与作品表达",
+      "status": "planned",
+      "requires": [
+        "S5.3"
+      ],
+      "purpose": "把真实能力沉淀成可以核验的证据。",
+      "activity": "未知故障诊断+独立设计评审；可选整理一份公开案例。",
+      "acceptance": "本人能解释关键判断；保留失败与限制，不以粉丝、收入或写文章数量验收。",
+      "material": "course/future-units.md"
+    }
+  ]
+}

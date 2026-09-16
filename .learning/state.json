@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-16",
+  "currentUnit": "S1.1",
+  "completedUnits": [],
+  "evidence": [],
+  "blockers": [],
+  "nextAction": "由导师带读 S1.1 的完整示范，再观察一个有依据的变化。",
+  "context": {
+    "background": "有前端开发经验，正在建立 AI 应用工程与 Agent Harness 技术储备",
+    "language": "zh-CN",
+    "implementation": "AI 可编码，学习者逐步主导判断",
+    "images": "客户端可显示图片",
+    "publishing": "从真实作品选择性沉淀，不要求日更；企业服务仅是未来选项"
+  }
+}

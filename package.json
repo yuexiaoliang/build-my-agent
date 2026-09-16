@@ -1,20 +1,23 @@
 {
   "name": "build-my-agent",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=24"
+    "node": ">=22.16.0"
   },
   "scripts": {
-    "check": "tsc --noEmit",
-    "check:tools": "bash scripts/tool-checks.sh",
-    "check:fixtures": "bash scripts/check-fixtures.sh",
-    "render:diagrams": "bash scripts/render-diagrams.sh",
-    "config": "node src/cli.ts config"
+    "start": "node --experimental-strip-types lab/server.ts",
+    "demo": "node --experimental-strip-types lab/cli.ts",
+    "learn": "node scripts/learn.mjs",
+    "test": "node scripts/test.mjs",
+    "check:types": "tsc --noEmit",
+    "check:course": "node scripts/check-course.mjs",
+    "verify": "npm run check:types && npm test && npm run check:course",
+    "render:visuals": "node scripts/render-visuals.mjs"
   },
   "devDependencies": {
-    "@mermaid-js/mermaid-cli": "^11.17.0",
-    "@types/node": "^26.5.1",
-    "typescript": "^7.0.2"
+    "@types/node": "22.19.7",
+    "typescript": "5.8.3"
   }
 }

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Build My Agent · 学习实验台</title><link rel="stylesheet" href="/style.css"></head>
+<body>
+<header><div class="brand">BUILD MY AGENT <span>学习实验台 / 01</span></div><p>从前端出发，把 AI 做成可靠的软件。</p></header>
+<main>
+<section class="intro"><p class="eyebrow">第一阶段 · 看见执行过程</p><h1>回答从哪里来？<br><span>沿着一次运行，找到依据。</span></h1><p>这里是预先编写的合成场景，不是真实模型表现。先看工具拿到了什么，再判断回答是否有依据。</p></section>
+<div class="workspace">
+<section class="panel controls" aria-labelledby="config-title"><h2 id="config-title">01 / 设置实验</h2>
+<form id="run-form">
+<label for="question">任务</label><textarea id="question" rows="3" maxlength="1000">这个项目怎样运行测试？请给出依据。</textarea>
+<p class="hint">合成场景只为这个固定任务编排；修改问题不代表脚本具备理解能力。</p>
+<div class="pair"><div><label for="mode">运行模式</label><select id="mode"><option value="scripted">合成离线 · 无 API 费用</option><option id="live-option" value="live" disabled>真实调用 · 尚未配置</option></select></div><div><label for="max-turns">模型轮数上限</label><input id="max-turns" type="number" min="1" max="8" value="4"></div></div>
+<label for="scenario">场景（不是成功率测试集）</label><select id="scenario"><option value="normal">读取依据后回答</option><option value="unsupported">没有读取依据就回答</option><option value="truncated">响应被截断</option><option value="unexpected-tool">请求不存在的工具</option><option value="repeat">同一批重复请求</option><option value="malformed">响应形状损坏</option><option value="slow">模型等待过久 / 取消练习</option></select>
+<label class="checkbox"><input id="tools-enabled" type="checkbox" checked>允许使用 read_doc（仅合成资料）</label>
+<div class="buttons"><button id="run-button" type="submit">开始实验</button><button id="cancel-button" type="button" class="secondary" disabled>停止运行</button></div>
+</form><p id="status" role="status" aria-live="polite">尚未运行。完成实验不会自动改变学习进度。</p>
+<details><summary>合成资料与边界</summary><p><code>testing</code>：运行测试使用 <code>npm test</code>。</p><p><code>development</code>：本地开发使用 <code>npm start</code>。</p><p>工具不读取你的文件，不启动进程。实验台是参考实现，你的学习工作区在 harness/。</p></details>
+</section>
+<section class="panel execution" aria-labelledby="trace-title"><div class="heading-row"><h2 id="trace-title">02 / 看见执行</h2><span id="mode-badge" class="badge">合成离线</span></div><p class="hint">事件流展示整轮模型响应与工具动作；不是模型逐 token 流式输出。</p><ol id="events" class="events"><li class="empty">运行后，按编号查看请求、响应、执行与停止。</li></ol></section>
+<section class="panel outcome" aria-labelledby="result-title"><h2 id="result-title">03 / 核验结果</h2><h3>模型回答</h3><pre id="answer">尚无回答</pre><h3>独立样例检查</h3><p id="verification">还没有运行结果。</p><ul id="checks"></ul><p class="hint">只检查本合成任务的固定格式与来源记录，不代表全面正确，也不证明学习者掌握。</p><button id="export-button" type="button" class="secondary" disabled>导出本次证据 JSON</button><p id="storage" class="hint">没有保存任何实验记录。</p></section>
+</div>
+<section class="panel visual"><h2>先沿一条信息走，再读代码</h2><p>图是机制示意，不是运行截图。关注第 3 步：本地得到结果以后，还要把它放进下一轮请求。</p><img src="/visuals/flow.svg" alt="1 用户向程序提出任务；2 程序请求模型；3 程序执行只读工具并回填结果；4 再次请求后返回回答；任务结果仍需核验。"><details><summary>为什么界面结束不等于任务完成？</summary><img src="/visuals/evidence.svg" alt="界面显示、运行状态、环境证据和学习证据是四个不同的检查层。"></details></section>
+</main><footer>离线案例 → 工程判断 → 真实作品 → 可核验的公开表达。没有就业、流量或收入保证。</footer>
+<script type="module" src="/app.js"></script>
+</body></html>

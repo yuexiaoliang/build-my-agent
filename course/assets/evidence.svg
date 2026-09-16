@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="570" viewBox="0 0 520 570" role="img" aria-labelledby="title desc">
+<title id="title">四种完成不能互相替代</title><desc id="desc">界面结束、运行结束、任务核验和学习证据是不同层次。每一层需要自己的依据。</desc>
+<rect width="520" height="570" rx="16" fill="#f4f7f5"/>
+<g font-family="Noto Sans CJK SC,Microsoft YaHei,sans-serif" fill="#173c38">
+<text x="32" y="43" font-size="24" font-weight="700">四种“完成”不是一回事</text><text x="32" y="74" font-size="16">每一层需要自己的证据；不能向下推断</text>
+<g fill="white" stroke="#8bafa5" stroke-width="2"><rect x="32" y="99" width="456" height="86" rx="10"/><rect x="32" y="207" width="456" height="86" rx="10"/><rect x="32" y="315" width="456" height="86" rx="10"/><rect x="32" y="423" width="456" height="100" rx="10"/></g>
+<text x="52" y="132" font-size="22" font-weight="700">1  界面状态</text><text x="52" y="163" font-size="18">按钮恢复了，还是服务端确认结束了？</text>
+<text x="52" y="240" font-size="22" font-weight="700">2  运行状态</text><text x="52" y="271" font-size="18">answered 只表示产出了回答</text>
+<text x="52" y="348" font-size="22" font-weight="700">3  任务核验</text><text x="52" y="379" font-size="18">命令、来源和环境结果是否满足要求？</text>
+<text x="52" y="456" font-size="22" font-weight="700">4  学习证据</text><text x="52" y="487" font-size="18">你能否解释依据、处理一个新变化？</text><text x="52" y="510" font-size="16">运行成功不会自动标记掌握</text>
+<text x="32" y="551" font-size="16">教学示意 · 当前检查器只覆盖固定合成任务</text></g></svg>
