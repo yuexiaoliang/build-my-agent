@@ -5,12 +5,12 @@
   "completedUnits": [],
   "evidence": [],
   "blockers": [],
-  "nextAction": "在本地由导师明确第一个小需求与验收，准备当前小步，再逐步建立项目；不启动或阅读预制实验台。",
+  "nextAction": "在本地由导师明确第一个小需求与验收，准备当前小步，再逐步建立项目。",
   "context": {
     "background": "有前端开发经验，正在建立 AI 应用工程与 Agent Harness 技术储备",
     "language": "zh-CN",
-    "implementation": "本地从零逐步构建；AI 可编码，学习者参与理解、判断与验证，不从预制系统开始",
+    "implementation": "本地从零逐步构建；AI 可编码，学习者参与理解、判断与验证",
     "images": "客户端可显示图片",
-    "publishing": "从真实作品选择性沉淀，不要求日更；企业服务仅是未来选项"
+    "expression": "经过验证的真实作品可按需沉淀为专业表达"
   }
 }
