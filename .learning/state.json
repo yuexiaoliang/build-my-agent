@@ -1,15 +1,16 @@
 {
-  "version": 1,
-  "updatedAt": "2026-09-17",
+  "version": 2,
+  "updatedAt": "2026-09-20",
   "currentUnit": "S1.1",
   "completedUnits": [],
   "evidence": [],
   "blockers": [],
-  "nextAction": "在本地由导师明确第一个小需求与验收，准备当前小步，再逐步建立项目。",
+  "nextAction": "在本地从一个足够小的 AI 应用需求开始；先检查当前小步环境与模型条件，再逐步建立实现和证据。",
   "context": {
-    "background": "有前端开发经验，正在建立 AI 应用工程与 Agent Harness 技术储备",
+    "background": "有前端开发经验，未来希望走 AI 应用方向",
+    "programGoal": "系统掌握 AI Application Engineering 的主要技术面；Agent Harness 作为重点技术纵深",
     "language": "zh-CN",
-    "implementation": "本地从零逐步构建；AI 可编码，学习者参与理解、判断与验证",
+    "implementation": "本地从零逐步构建；AI 可编码，学习者参与设计、理解、诊断、评测与验证",
     "images": "客户端可显示图片",
     "expression": "经过验证的真实作品可按需沉淀为专业表达"
   }
