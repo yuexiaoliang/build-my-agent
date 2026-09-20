@@ -1,291 +1,669 @@
 {
-  "version": 2,
+  "version": 3,
+  "programGoal": "AI Application Engineering 是总目标；Agent Harness 是重点技术纵深。课程覆盖主要 AI 应用技术面，并训练面对新模型、协议和框架时的迁移判断。",
+  "technologyDomains": [
+    {
+      "id": "FOUNDATION",
+      "title": "模型 API、Prompt、Structured Output 与上下文基础"
+    },
+    {
+      "id": "AI_UX",
+      "title": "AI 前端交互、Streaming 与状态"
+    },
+    {
+      "id": "RETRIEVAL",
+      "title": "RAG、检索与 Context Engineering"
+    },
+    {
+      "id": "HARNESS",
+      "title": "Tools、Agent 与 Harness"
+    },
+    {
+      "id": "SECURITY",
+      "title": "安全、权限、隔离与数据边界"
+    },
+    {
+      "id": "MULTIMODAL",
+      "title": "Vision、Document、Audio 与 Realtime"
+    },
+    {
+      "id": "EVALS",
+      "title": "Evals、实验与回归"
+    },
+    {
+      "id": "OBSERVABILITY",
+      "title": "Tracing、Metrics 与故障诊断"
+    },
+    {
+      "id": "OPTIMIZATION",
+      "title": "模型选择、Routing、缓存、成本与性能"
+    },
+    {
+      "id": "BACKEND",
+      "title": "AI Backend、异步任务与生产交付"
+    },
+    {
+      "id": "ECOSYSTEM",
+      "title": "MCP、Provider Adapter 与生态集成"
+    }
+  ],
   "stages": [
     {
       "id": "S1",
-      "title": "做通一个可观察的 AI 功能",
-      "exit": "从零建立一个小型 AI 功能，能解释页面、服务、模型、结果与验证的对应关系。"
+      "title": "LLM 应用基础与 AI UX",
+      "exit": "从零完成一个可观察的 AI 功能，能解释模型请求、结构化结果、流式状态和前后端边界。"
     },
     {
       "id": "S2",
-      "title": "构建自己的最小 Harness",
-      "exit": "在已有作品上逐步构建最小 Harness，关键行为有实际测试和理解证据。"
+      "title": "RAG 与 Context Engineering",
+      "exit": "完成可测量的检索增强链路，能解释搜索、切分、重排、引用与上下文选择。"
     },
     {
       "id": "S3",
-      "title": "让执行可控可信",
-      "exit": "能够约束有副作用任务，解释真实状态和恢复边界。"
+      "title": "Agent Harness 与生态集成",
+      "exit": "在已有应用上构建受控 Harness，理解工具、循环、状态、工作流、MCP 与集成边界。"
     },
     {
       "id": "S4",
-      "title": "处理复杂任务并做实验",
-      "exit": "用证据解释上下文、规划和模型/系统取舍。"
+      "title": "可靠执行与安全边界",
+      "exit": "让有副作用和长任务可控，覆盖校验、权限、隔离、取消、幂等与恢复。"
     },
     {
       "id": "S5",
-      "title": "交付 Web 作品与独立迁移",
-      "exit": "在陌生需求中主导判断，完成可运行与可解释的作品。"
+      "title": "多模态与 Realtime",
+      "exit": "交付至少一个图像/文档能力和一个实时音频交互，解释媒体链路、延迟与降级。"
+    },
+    {
+      "id": "S6",
+      "title": "Evals 与 Observability",
+      "exit": "建立可重复评测与端到端 trace，用证据定位模型、检索、工具和系统问题。"
+    },
+    {
+      "id": "S7",
+      "title": "模型选择与成本性能优化",
+      "exit": "能在质量、延迟、成本和复杂度之间做有数据依据的模型与系统优化。"
+    },
+    {
+      "id": "S8",
+      "title": "生产交付与独立迁移",
+      "exit": "完成可部署的 AI Web 产品，并在陌生需求中独立选择架构、验证方案和迁移边界。"
     }
   ],
   "units": [
     {
       "id": "S1.1",
       "stage": "S1",
-      "title": "从一个小需求明确起点",
+      "title": "从需求到模型调用边界",
       "status": "planned",
       "requires": [],
-      "purpose": "从已有前端经验出发，确定第一个小功能要解决什么以及怎样验收。",
-      "activity": "本地导师利用已知背景缩小需求、比较简单方案，检查本步必要环境并准备当前示范。",
-      "acceptance": "能说明本步问题、验收依据与下一最小实现范围；不要求先读一个成品。",
+      "purpose": "从已有前端经验出发，定义一个足够小的 AI 功能、验收和数据边界。",
+      "activity": "检查本地环境与提供商条件；实现最小模型调用或明确标注的合成替代，记录输入、输出、错误与费用边界。",
+      "acceptance": "能说清浏览器、服务端、模型服务各自负责什么；真实调用与模拟证据不混淆。",
+      "domains": [
+        "FOUNDATION",
+        "BACKEND"
+      ],
       "material": null
     },
     {
       "id": "S1.2",
       "stage": "S1",
-      "title": "建立一次可观察的调用",
+      "title": "消息、Prompt 与上下文窗口",
       "status": "planned",
       "requires": [
         "S1.1"
       ],
-      "purpose": "把输入、模型交互和输出连起来，理解哪里是应用边界。",
-      "activity": "在课堂中由 AI 创建本步需要的最小 TypeScript 调用及局部验证；凭证缺失时用明确标注的桩件验证本地部分。",
-      "acceptance": "能追踪输入到输出，区分真实调用与模拟；不得以模拟通过宣称模型可用。",
+      "purpose": "理解指令、用户输入、上下文和模型输出如何共同影响一次生成。",
+      "activity": "用同一任务比较不同消息/提示结构，观察 token、截断和上下文变化；不把某一供应商的消息格式当普遍真理。",
+      "acceptance": "能定位一次请求中各类上下文来源，并解释至少一个上下文变化为何影响结果。",
+      "domains": [
+        "FOUNDATION"
+      ],
       "material": null
     },
     {
       "id": "S1.3",
       "stage": "S1",
-      "title": "逐步连接页面与服务",
+      "title": "Structured Output 与运行时校验",
       "status": "planned",
       "requires": [
         "S1.2"
       ],
-      "purpose": "利用前端经验理解页面意图如何到达服务端、结果如何回来。",
-      "activity": "基于上一小步代码，逐步添加最小页面/服务连接，配当前数据流图并验证。",
-      "acceptance": "能指出界面状态、服务端行为与模型响应的区别；不一次生成控制台或完整 Agent。",
+      "purpose": "把自然语言输出连接到程序契约，而不是靠字符串猜测。",
+      "activity": "定义 JSON Schema/类型约束，比较自由文本、JSON 与结构化输出；加入拒绝、缺字段和无效值反例。",
+      "acceptance": "能区分 TypeScript 类型、模型结构化约束和本地运行时校验；错误输入不会静默进入业务逻辑。",
+      "domains": [
+        "FOUNDATION",
+        "SECURITY"
+      ],
       "material": null
     },
     {
       "id": "S1.4",
       "stage": "S1",
-      "title": "通过一次失败校准判断",
+      "title": "Streaming、状态与 AI UX",
       "status": "planned",
       "requires": [
         "S1.3"
       ],
-      "purpose": "知道能运行、产生输出和满足需求为什么不是同一结论。",
-      "activity": "围绕已实现功能准备一个可控失败，定位原因、做最小修正并比较是否需要 Agent。",
-      "acceptance": "能说明失效位置、检查覆盖与简单替代方案，完成首个可解释的小功能。",
+      "purpose": "利用前端优势建立真实的生成状态、停止、错误和结果体验。",
+      "activity": "逐步接入流式输出或可控事件流，处理 loading、partial、done、error、cancel-requested 与 confirmed 状态。",
+      "acceptance": "界面不把断网、点击停止或收到部分文本冒充服务端已停止或任务已完成。",
+      "domains": [
+        "AI_UX",
+        "FOUNDATION"
+      ],
       "material": null
     },
     {
       "id": "S2.1",
       "stage": "S2",
-      "title": "从一条输入输出契约开始",
+      "title": "关键词、Embedding 与向量检索",
       "status": "planned",
       "requires": [
         "S1.4"
       ],
-      "purpose": "让类型、实际数据和错误边界对应。",
-      "activity": "基于本地已建立的小功能，逐步提取自己的消息与响应契约，用有效/畸形输入验证，不另开一个现成参考实现。",
-      "acceptance": "无效输入显式失败，类型声明不能冒充运行时校验。",
+      "purpose": "理解 lexical 与 semantic retrieval 的差异，并建立简单可比较的检索基线。",
+      "activity": "在小数据集上实现关键词检索与 embedding/vector retrieval，记录查询、top-k 和命中情况。",
+      "acceptance": "能解释向量相似度能解决什么、不能证明什么；至少有一个关键词优于向量或相反的对照例。",
+      "domains": [
+        "RETRIEVAL"
+      ],
       "material": null
     },
     {
       "id": "S2.2",
       "stage": "S2",
-      "title": "工具请求怎样成为合法动作",
+      "title": "Chunking、Metadata 与 Hybrid Search",
       "status": "planned",
       "requires": [
         "S2.1"
       ],
-      "purpose": "分离提议、校验、启用范围和执行。",
-      "activity": "自建只读工具集合；给未知工具、坏参数、无权限请求。",
-      "acceptance": "未启用或非法动作不执行，拒绝有依据，工具结果关联回正确请求；通过本步实际测试。",
+      "purpose": "把文档处理、权限元数据和检索策略连接起来。",
+      "activity": "比较两种切分策略；加入 metadata filter，并尝试关键词+向量的 hybrid baseline。",
+      "acceptance": "能说明 chunk 边界、元数据和过滤如何改变召回；权限过滤不能只靠提示词。",
+      "domains": [
+        "RETRIEVAL",
+        "SECURITY"
+      ],
       "material": null
     },
     {
       "id": "S2.3",
       "stage": "S2",
-      "title": "循环、预算与停止",
+      "title": "Query Rewrite、Rerank 与 Citations",
       "status": "planned",
       "requires": [
         "S2.2"
       ],
-      "purpose": "组合策略仍须遵守执行契约。",
-      "activity": "按本步需求逐步建立循环和预算/重复策略，再用相互作用的边界场景验证。",
-      "acceptance": "轮数和工具预算的语义明确，组合策略不绕过执行边界；不预设全产品通用的重复阈值。",
+      "purpose": "提高候选质量并让回答可以追溯来源。",
+      "activity": "对同一查询比较原始检索、query rewrite、rerank；生成引用并核对引用内容真的支持结论。",
+      "acceptance": "能区分检索命中、排序更好和答案被证据支持；错误引用可被独立发现。",
+      "domains": [
+        "RETRIEVAL",
+        "EVALS"
+      ],
       "material": null
     },
     {
       "id": "S2.4",
       "stage": "S2",
-      "title": "可复现的结果与协议对照",
+      "title": "Context Assembly、缓存与 RAG 评测",
       "status": "planned",
       "requires": [
         "S2.3"
       ],
-      "purpose": "让运行和检查可以独立复核。",
-      "activity": "记录独立 run id、消息、终态；比较一个实际可用接口或已注明的合成协议。",
-      "acceptance": "旧证据不可覆盖；解析回放与完整循环测试分别说明。",
+      "purpose": "把检索结果转成有限、可测量的模型上下文，并理解 prompt/context caching 的边界。",
+      "activity": "控制上下文预算、去重/压缩，记录缓存可观察指标；建立小型 retrieval + answer eval 数据集。",
+      "acceptance": "能用数据比较两种上下文策略，并说明缓存命中、检索质量和最终回答质量不是同一指标。",
+      "domains": [
+        "RETRIEVAL",
+        "FOUNDATION",
+        "EVALS",
+        "OPTIMIZATION"
+      ],
       "material": null
     },
     {
       "id": "S3.1",
       "stage": "S3",
-      "title": "授权与受控编辑",
+      "title": "Tool Contract 与 Function Calling",
       "status": "planned",
       "requires": [
         "S2.4"
       ],
-      "purpose": "允许某个动作，不等于允许之后所有动作。",
-      "activity": "预置独立工作区，审批绑定具体参数和内容版本，再实现受限补丁。",
-      "acceptance": "参数变化需重新决定；路径、符号链接与执行隔离不混淆。",
+      "purpose": "理解模型提出动作与程序授权执行之间的契约。",
+      "activity": "定义只读工具 schema、参数校验与结果关联；加入未知工具、坏参数和重复 id 反例。",
+      "acceptance": "模型不能仅凭输出文字获得执行能力；非法请求不产生副作用，工具结果关联到正确调用。",
+      "domains": [
+        "HARNESS",
+        "SECURITY"
+      ],
       "material": null
     },
     {
       "id": "S3.2",
       "stage": "S3",
-      "title": "流式与取消传播",
+      "title": "Agent Loop、任务状态与记忆",
       "status": "planned",
       "requires": [
         "S3.1"
       ],
-      "purpose": "前端停止显示不等于后台停止工作。",
-      "activity": "到本步再在已有作品上接入增量响应、输出限制和取消，并验证慢消费者与超时。",
-      "acceptance": "取消后无新动作，无法终止者标状态未知；不能伪称回滚。",
+      "purpose": "构建最小 Harness 循环，并区分会话消息、任务状态和持久记忆。",
+      "activity": "逐步加入 model→tool→observation→next decision 循环、轮数/工具/时间预算和明确停止原因。",
+      "acceptance": "组合策略不会绕过预算；状态恢复所需信息可解释，长期记忆不会被默认等同于完整聊天历史。",
+      "domains": [
+        "HARNESS",
+        "FOUNDATION",
+        "OPTIMIZATION"
+      ],
       "material": null
     },
     {
       "id": "S3.3",
       "stage": "S3",
-      "title": "记录与恢复",
+      "title": "Workflow、Planning 与 Subagent",
       "status": "planned",
       "requires": [
         "S3.2"
       ],
-      "purpose": "日志里的成功与环境里的结果可能不同。",
-      "activity": "模拟动作成功但确认丢失，核对环境再决定恢复或人工处理。",
-      "acceptance": "不盲目重试副作用，记录幂等边界与无法确定的状态。",
+      "purpose": "判断何时用固定流程、单 Agent、规划或有限委派。",
+      "activity": "同一任务分别比较简单规则、固定 workflow 与 Agent 方案；只有出现明确收益再加入 plan 或 subagent。",
+      "acceptance": "能依据任务不确定性、成本和失败后果选择较简单方案；多 Agent 无收益也可以是正确结论。",
+      "domains": [
+        "HARNESS",
+        "EVALS"
+      ],
       "material": null
     },
     {
       "id": "S3.4",
       "stage": "S3",
-      "title": "独立结果核验",
+      "title": "MCP、Provider Adapter 与生态集成",
       "status": "planned",
       "requires": [
         "S3.3"
       ],
-      "purpose": "测试通过不是需求完成的全部证据。",
-      "activity": "在隔离环境修复小缺陷，核对补丁范围、测试、工作区和需求。",
-      "acceptance": "拒绝修改评分器冒充成功，说明哪些检查不能覆盖。",
+      "purpose": "理解 Harness 如何连接外部工具生态，同时避免被单一 SDK 锁死。",
+      "activity": "按当时正式 MCP 规范做最小 client/server 或使用成熟 SDK；同时保留内部 provider/tool adapter 边界。",
+      "acceptance": "能指出协议层、SDK 层和业务授权层的区别；更换模型或工具提供方时核心业务不被迫整体重写。",
+      "domains": [
+        "HARNESS",
+        "ECOSYSTEM",
+        "SECURITY"
+      ],
       "material": null
     },
     {
       "id": "S4.1",
       "stage": "S4",
-      "title": "检索与上下文选择",
+      "title": "Validation、Retry、Timeout 与 Idempotency",
       "status": "planned",
       "requires": [
         "S3.4"
       ],
-      "purpose": "把必要资料提供给模型，而不是一次塞整个仓库。",
-      "activity": "先做文本搜索基线，再选择片段并记录来源/截断边界。",
-      "acceptance": "信息缺失时补检索或承认限制；不把外部文本当授权指令。",
+      "purpose": "处理概率模型和网络系统常见失败，不把重试当万能修复。",
+      "activity": "为模型调用、工具调用和外部 API 分别设计超时、可重试错误、退避和幂等策略。",
+      "acceptance": "能说明何时不能自动重试；重复请求不会在无保护时重复产生不可逆副作用。",
+      "domains": [
+        "BACKEND",
+        "SECURITY",
+        "HARNESS"
+      ],
       "material": null
     },
     {
       "id": "S4.2",
       "stage": "S4",
-      "title": "压缩、任务状态与记忆",
+      "title": "Auth、RBAC、Multi-tenancy 与数据边界",
       "status": "planned",
       "requires": [
         "S4.1"
       ],
-      "purpose": "省下的上下文可能包含关键约束。",
-      "activity": "比较原文、摘要和回取；区分当前任务状态与跨任务记忆。",
-      "acceptance": "测试约束丢失、过期和污染，缓存指标只报实际可观察值。",
+      "purpose": "把用户身份和数据访问控制放在程序边界，而非交给模型猜。",
+      "activity": "加入最小认证/授权模型、租户隔离、对象级过滤和 secret 管理；构造跨租户反例。",
+      "acceptance": "用户 A 的上下文、检索和工具结果不能因模型提示或缓存误入用户 B；密钥不进入浏览器或日志。",
+      "domains": [
+        "SECURITY",
+        "BACKEND",
+        "RETRIEVAL"
+      ],
       "material": null
     },
     {
       "id": "S4.3",
       "stage": "S4",
-      "title": "规划、委派与扩展",
+      "title": "Prompt Injection、Approval 与 Sandbox",
       "status": "planned",
       "requires": [
         "S4.2"
       ],
-      "purpose": "复杂性增加之前先证明需要。",
-      "activity": "同一任务比较简单循环、固定流程和有限委派；按需接入 MCP。",
-      "acceptance": "解释输入输出、预算与取消边界；多 Agent 无收益也可合格。",
+      "purpose": "处理不可信内容影响工具执行的风险。",
+      "activity": "用外部文档中的恶意指令做反例；为高风险工具增加参数级 approval、路径/能力限制和隔离执行。",
+      "acceptance": "外部内容不能自己扩权；批准绑定具体动作与参数，sandbox/allowlist 的能力和局限可解释。",
+      "domains": [
+        "SECURITY",
+        "HARNESS"
+      ],
       "material": null
     },
     {
       "id": "S4.4",
       "stage": "S4",
-      "title": "评测、消融与性能",
+      "title": "长任务、取消、Checkpoint 与 Recovery",
       "status": "planned",
       "requires": [
         "S4.3"
       ],
-      "purpose": "一次看起来更好不构成收益证据。",
-      "activity": "固定任务和预算，重复比较一个策略；校验评分器与保留任务。",
-      "acceptance": "报告样本、失败、费用或用量和不确定性；不伪造显著提升。",
+      "purpose": "让长时间执行可以停止、观察和恢复，而不是靠一个 loading 状态。",
+      "activity": "实现 background job/任务状态、取消传播、checkpoint；模拟动作成功但回执丢失后先核对环境再恢复。",
+      "acceptance": "取消请求、服务端确认和副作用回滚分开报告；恢复不盲目重放已经可能成功的动作。",
+      "domains": [
+        "HARNESS",
+        "BACKEND",
+        "AI_UX",
+        "SECURITY"
+      ],
       "material": null
     },
     {
       "id": "S5.1",
       "stage": "S5",
-      "title": "把控制能力做进界面",
+      "title": "Vision 与文档理解",
       "status": "planned",
       "requires": [
         "S4.4"
       ],
-      "purpose": "在早期最小界面基础上，让使用者理解与控制已经实现的复杂能力。",
-      "activity": "基于自己的 Harness 逐步完善轨迹、审批、停止、结果审阅和故障反馈，而不是移植预制控制台。",
-      "acceptance": "端到端验证，界面不把请求取消或网络断开当后台确认。",
+      "purpose": "把图像、截图和文档作为真实输入，而非全部先转成普通文本。",
+      "activity": "完成一个图像/截图理解任务和一个文档任务，比较原生多模态、解析文本或 OCR 等路径的适用边界。",
+      "acceptance": "能核对视觉/文档结果来源，知道布局、图表和解析错误何时影响结论。",
+      "domains": [
+        "MULTIMODAL",
+        "FOUNDATION"
+      ],
       "material": null
     },
     {
       "id": "S5.2",
       "stage": "S5",
-      "title": "配置、部署与维护",
+      "title": "Speech-to-Text、TTS 与音频管线",
       "status": "planned",
       "requires": [
         "S5.1"
       ],
-      "purpose": "别人能启动、定位和安全使用，才算可交付。",
-      "activity": "准备配置诊断、发布与回归；实际选一种部署环境。",
-      "acceptance": "密钥留服务端；多用户先补认证、配额和隔离；未验证平台写清。",
+      "purpose": "理解语音应用的输入、转写、生成和播放链路。",
+      "activity": "接入一次转写和一次语音合成，记录格式、延迟、错误与文本/音频对应关系。",
+      "acceptance": "能定位音频问题发生在采集、编码、识别、生成还是播放，不把转写正确等同于整条语音体验正确。",
+      "domains": [
+        "MULTIMODAL",
+        "AI_UX"
+      ],
       "material": null
     },
     {
       "id": "S5.3",
       "stage": "S5",
-      "title": "迁移到一个新需求",
+      "title": "Realtime Voice、WebRTC 与打断",
       "status": "planned",
       "requires": [
         "S5.2"
       ],
-      "purpose": "把可复用机制与领域约束分开。",
-      "activity": "先调研具体流程，再比较规则/AI 辅助/工作流/Agent，选择一项迁移。",
-      "acceptance": "允许不用 Agent；给出约束、最小验证和退出条件，不冒充行业专家。",
+      "purpose": "构建低延迟的实时交互，理解会话状态与媒体传输。",
+      "activity": "实现最小实时语音或低延迟双向媒体会话，处理 turn detection、interrupt、工具调用和断线。",
+      "acceptance": "能解释 WebRTC/WebSocket 的实际职责、打断后的状态，以及为什么 UI 停止播放不等于后台停止。",
+      "domains": [
+        "MULTIMODAL",
+        "AI_UX",
+        "HARNESS"
+      ],
       "material": null
     },
     {
       "id": "S5.4",
       "stage": "S5",
-      "title": "技术答辩与作品表达",
+      "title": "多模态产品 UX 与降级策略",
       "status": "planned",
       "requires": [
         "S5.3"
       ],
-      "purpose": "把真实能力沉淀成可以核验的证据。",
-      "activity": "未知故障诊断+独立设计评审；可选整理一份公开案例。",
-      "acceptance": "本人能解释关键判断；保留失败与限制，不以粉丝、收入或写文章数量验收。",
+      "purpose": "把文本、图像、音频和工具行为组合成可用产品体验。",
+      "activity": "设计权限提示、上传/录音状态、延迟反馈、失败 fallback 和可访问性；在网络或模型能力不足时降级。",
+      "acceptance": "用户能知道系统正在用什么能力、数据去了哪里、失败后还能做什么；降级不会伪造能力。",
+      "domains": [
+        "MULTIMODAL",
+        "AI_UX",
+        "SECURITY"
+      ],
+      "material": null
+    },
+    {
+      "id": "S6.1",
+      "stage": "S6",
+      "title": "任务集、成功标准与 Golden Dataset",
+      "status": "planned",
+      "requires": [
+        "S5.4"
+      ],
+      "purpose": "把“感觉效果好”变成可重复验证的任务集合。",
+      "activity": "从真实失败和需求中构建小型 eval dataset，定义任务成功、过程约束和不可接受失败。",
+      "acceptance": "评测任务与产品目标对应；调试样例和保留样例分开，不能边看答案边宣称泛化。",
+      "domains": [
+        "EVALS"
+      ],
+      "material": null
+    },
+    {
+      "id": "S6.2",
+      "stage": "S6",
+      "title": "Graders、回归与人类评审",
+      "status": "planned",
+      "requires": [
+        "S6.1"
+      ],
+      "purpose": "合理组合 deterministic、model-based 与 human evaluation。",
+      "activity": "为同一任务实现至少两类 grader，用已知正反例校验 grader；建立回归入口和人工抽查协议。",
+      "acceptance": "评分器自身错误可被发现；model grader 的输出不是客观真值，关键安全要求优先使用可验证检查。",
+      "domains": [
+        "EVALS",
+        "SECURITY"
+      ],
+      "material": null
+    },
+    {
+      "id": "S6.3",
+      "stage": "S6",
+      "title": "Tracing、Metrics 与 GenAI Observability",
+      "status": "planned",
+      "requires": [
+        "S6.2"
+      ],
+      "purpose": "从端到端 trace 定位模型、检索、工具和系统耗时或失败。",
+      "activity": "记录 request/trace id、模型与工具 span、token、延迟、错误和必要指标；敏感内容默认不裸记。",
+      "acceptance": "能回答一次慢、贵或失败主要发生在哪个阶段，并区分 trace、log、metric 和业务结果。",
+      "domains": [
+        "OBSERVABILITY",
+        "BACKEND",
+        "SECURITY"
+      ],
+      "material": null
+    },
+    {
+      "id": "S6.4",
+      "stage": "S6",
+      "title": "实验、A/B、消融与失败分类",
+      "status": "planned",
+      "requires": [
+        "S6.3"
+      ],
+      "purpose": "用实验比较策略，而不是从一次成功推断收益。",
+      "activity": "固定任务与预算，重复比较一个可控变量；做至少一次 ablation，并维护 failure taxonomy。",
+      "acceptance": "报告样本、波动、失败、用量和不确定性；负结果可以推翻原假设。",
+      "domains": [
+        "EVALS",
+        "OBSERVABILITY",
+        "OPTIMIZATION"
+      ],
+      "material": null
+    },
+    {
+      "id": "S7.1",
+      "stage": "S7",
+      "title": "Model Selection 与能力矩阵",
+      "status": "planned",
+      "requires": [
+        "S6.4"
+      ],
+      "purpose": "根据任务、模态、上下文、延迟和价格选择模型，而不是默认最大模型。",
+      "activity": "对至少两种能力或成本不同的模型做同任务基准，记录可用能力、质量、延迟和用量。",
+      "acceptance": "模型选择有数据依据；供应商宣传、一次回答和历史印象不能替代当前任务评测。",
+      "domains": [
+        "OPTIMIZATION",
+        "FOUNDATION",
+        "EVALS"
+      ],
+      "material": null
+    },
+    {
+      "id": "S7.2",
+      "stage": "S7",
+      "title": "Routing、Fallback、Caching 与 Rate Limits",
+      "status": "planned",
+      "requires": [
+        "S7.1"
+      ],
+      "purpose": "把稳定性和成本控制做成系统策略。",
+      "activity": "实现最小 model routing/fallback；比较 prompt/context/result caching 的适用条件，并处理 rate limit/backpressure。",
+      "acceptance": "fallback 不绕过安全或质量底线；缓存 key、过期和租户边界明确，限流不会被无限重试放大。",
+      "domains": [
+        "OPTIMIZATION",
+        "BACKEND",
+        "SECURITY"
+      ],
+      "material": null
+    },
+    {
+      "id": "S7.3",
+      "stage": "S7",
+      "title": "Latency、Cost 与吞吐优化",
+      "status": "planned",
+      "requires": [
+        "S7.2"
+      ],
+      "purpose": "定位真正的性能瓶颈，避免只盯模型 token。",
+      "activity": "基于 trace 优化并发、批处理、上下文长度、工具数量或小模型替代，前后用同一 eval 比较。",
+      "acceptance": "能报告优化对质量、P50/P95 延迟、token/费用和吞吐的影响；没有收益就回退。",
+      "domains": [
+        "OPTIMIZATION",
+        "OBSERVABILITY",
+        "EVALS",
+        "BACKEND"
+      ],
+      "material": null
+    },
+    {
+      "id": "S7.4",
+      "stage": "S7",
+      "title": "Fine-tuning、Distillation 与 Synthetic Data 的决策边界",
+      "status": "planned",
+      "requires": [
+        "S7.3"
+      ],
+      "purpose": "理解何时应继续改提示、检索或工具，何时才值得做模型适配。",
+      "activity": "用一个具体任务比较 prompt、RAG 与 fine-tuning 候选方案；理解 SFT、蒸馏、合成数据的输入、验证与风险，可选做小规模受控实验。",
+      "acceptance": "不把微调当万能知识库；能说明需要的数据质量、评测集和回滚条件，不要求深入训练基础设施。",
+      "domains": [
+        "OPTIMIZATION",
+        "EVALS",
+        "FOUNDATION"
+      ],
+      "material": null
+    },
+    {
+      "id": "S8.1",
+      "stage": "S8",
+      "title": "AI Backend：数据库、对象存储、队列与 Webhook",
+      "status": "planned",
+      "requires": [
+        "S7.4"
+      ],
+      "purpose": "补齐真实 AI 产品除模型之外的服务端基础设施。",
+      "activity": "让现有作品按需要接入数据库、对象存储、后台队列或 webhook；为异步任务设计状态与重放边界。",
+      "acceptance": "能解释每个基础设施为什么存在，失败与一致性如何处理；不为了技术清单强行引入无用组件。",
+      "domains": [
+        "BACKEND",
+        "SECURITY"
+      ],
+      "material": null
+    },
+    {
+      "id": "S8.2",
+      "stage": "S8",
+      "title": "部署、配置、配额与运维",
+      "status": "planned",
+      "requires": [
+        "S8.1"
+      ],
+      "purpose": "把作品从本机推向可维护的部署环境。",
+      "activity": "选择一种实际部署方式，建立配置诊断、secret、认证、rate limit/quota、健康检查、监控和回归流程。",
+      "acceptance": "干净环境可启动；密钥留服务端；多用户数据隔离与资源上限有验证，未验证平台能力明确写出。",
+      "domains": [
+        "BACKEND",
+        "OBSERVABILITY",
+        "SECURITY"
+      ],
+      "material": null
+    },
+    {
+      "id": "S8.3",
+      "stage": "S8",
+      "title": "综合 AI 应用 Capstone",
+      "status": "planned",
+      "requires": [
+        "S8.2"
+      ],
+      "purpose": "把课程技术按需求组合成一个完整 AI 产品，而不是为了覆盖率堆功能。",
+      "activity": "先写用户问题、架构选择和验收，再实现 Web 产品；按实际需求组合 structured output、RAG、tools/Harness、多模态、evals 与 observability。",
+      "acceptance": "产品可运行、可验证、可观测；每项技术有明确理由，不需要 Agent、RAG 或多模态的部分可以不用。",
+      "domains": [
+        "FOUNDATION",
+        "AI_UX",
+        "RETRIEVAL",
+        "HARNESS",
+        "SECURITY",
+        "MULTIMODAL",
+        "EVALS",
+        "OBSERVABILITY",
+        "OPTIMIZATION",
+        "BACKEND",
+        "ECOSYSTEM"
+      ],
+      "material": null
+    },
+    {
+      "id": "S8.4",
+      "stage": "S8",
+      "title": "陌生需求迁移与技术答辩",
+      "status": "planned",
+      "requires": [
+        "S8.3"
+      ],
+      "purpose": "证明面对新场景时能重新做判断，而不是只会复刻课程项目。",
+      "activity": "选择一个不同领域的小需求，在 AI 展开完整方案前先提出约束、选型与验证；完成关键迁移并进行故障诊断或设计答辩。",
+      "acceptance": "能解释为什么使用或不使用模型、RAG、Agent、Realtime 等；指出未验证边界，并用作品和证据支持主要判断。",
+      "domains": [
+        "FOUNDATION",
+        "RETRIEVAL",
+        "HARNESS",
+        "SECURITY",
+        "MULTIMODAL",
+        "EVALS",
+        "OBSERVABILITY",
+        "OPTIMIZATION",
+        "BACKEND",
+        "ECOSYSTEM"
+      ],
       "material": null
     }
   ],
-  "delivery": "design-only; materials and implementation are prepared one step at a time during local learning"
+  "delivery": "design-only; current-step materials, code, tests and evidence are created during local learning"
 }
