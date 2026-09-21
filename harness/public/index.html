@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>反馈摘要边界实验</title>
+    <style>
+      :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+      body { margin: 0; background: #f5f7fb; color: #172033; }
+      main { width: min(720px, calc(100% - 32px)); margin: 64px auto; }
+      .eyebrow { color: #465fdd; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+      h1 { margin: 8px 0; font-size: clamp(2rem, 6vw, 3.5rem); letter-spacing: -.04em; }
+      .intro { color: #526079; line-height: 1.7; }
+      form { display: grid; gap: 12px; margin-top: 32px; padding: 24px; border: 1px solid #dfe4ef; border-radius: 20px; background: white; box-shadow: 0 18px 55px rgb(37 51 92 / 8%); }
+      label { font-weight: 700; }
+      textarea { min-height: 136px; resize: vertical; border: 1px solid #c7cfdf; border-radius: 12px; padding: 14px; font: inherit; line-height: 1.5; }
+      button { justify-self: start; border: 0; border-radius: 999px; padding: 11px 18px; background: #293eac; color: white; font: inherit; font-weight: 700; cursor: pointer; }
+      button:disabled { cursor: wait; opacity: .55; }
+      #result { min-height: 64px; margin-top: 20px; padding: 18px; border-radius: 16px; background: #172033; color: #f7f9ff; white-space: pre-wrap; }
+      .badge { display: inline-block; margin-bottom: 9px; padding: 4px 9px; border-radius: 999px; background: #fff1b8; color: #5d4700; font-size: .78rem; font-weight: 800; }
+      .note { margin-top: 12px; color: #667089; font-size: .88rem; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">本地反馈摘要 · 合成响应</div>
+      <h1>把反馈变成一句摘要</h1>
+      <p class="intro">浏览器只把用户输入交给我们的服务端；本页没有模型密钥，也不直接访问模型供应商。</p>
+
+      <form id="summary-form">
+        <label for="feedback">产品反馈</label>
+        <textarea id="feedback" maxlength="2000">登录后页面一直转圈，我明天要给客户演示，麻烦尽快处理。</textarea>
+        <button type="submit">生成摘要</button>
+      </form>
+
+      <section id="result" aria-live="polite">等待输入</section>
+      <p class="note">当前是合成模式：可验证应用链路，不能验证真实模型质量、费用或延迟。</p>
+    </main>
+
+    <script type="module">
+      const form = document.querySelector("#summary-form");
+      const input = document.querySelector("#feedback");
+      const result = document.querySelector("#result");
+      const button = form.querySelector("button");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        button.disabled = true;
+        result.textContent = "请求中…";
+
+        try {
+          const response = await fetch("/api/summarize", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ input: input.value }),
+          });
+          const data = await response.json();
+
+          if (!response.ok) throw new Error(data.error ?? "请求失败");
+
+          result.replaceChildren();
+          const badge = document.createElement("span");
+          badge.className = "badge";
+          badge.textContent = data.evidence.mode === "synthetic" ? "合成证据" : "真实调用";
+          const summary = document.createElement("div");
+          summary.textContent = data.summary;
+          result.append(badge, summary);
+        } catch (error) {
+          result.textContent = `错误：${error.message}`;
+        } finally {
+          button.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>

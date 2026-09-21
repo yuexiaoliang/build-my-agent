@@ -16,14 +16,14 @@
 - [Anthropic：Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)：workflows 与 agents、从简单方案开始的工程视角。
 - [Anthropic Tool Use 文档](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview)：另一套供应商工具调用实现，用于避免把单一 API 形状当通用协议。
 - [Model Context Protocol Specification](https://modelcontextprotocol.io/specification/)：MCP 正式规范入口；课堂使用时必须确认当前正式版本与迁移说明。
-- [MCP 2026-07-28 release](https://blog.modelcontextprotocol.io/posts/2026-07-28/)：当次正式规范的 stateless core、extensions、authorization 等变化，之后有新版本时以新版规范为准。
 
 ## Evals、Observability 与工程基础
 
+- [Anthropic：Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)：从任务、trial、grader 与实际环境结果建立评测，区分模型自述和真实完成。
 - [OpenTelemetry Generative AI semantic conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/)：GenAI trace/metric/event 的标准化语义入口。
 - [OpenTelemetry：GenAI Observability](https://opentelemetry.io/blog/2026/genai-observability/)：模型调用、工具、token 与 latency 可观测性的实践示例。
 - [Node.js TypeScript 文档](https://nodejs.org/api/typescript.html) 与 [TypeScript 配置](https://www.typescriptlang.org/tsconfig/)：本地工具链需要时核对。
-- [IES/WWC 教学指南](https://ies.ed.gov/ncee/wwc/PracticeGuide/1)：工作样例、图文结合与复访等教学设计依据。
+- [IES/WWC 教学指南](https://ies.ed.gov/ncee/wwc/PracticeGuide/1)：示范与自主实践交替、图文结合和延后复访的设计依据；不把这些建议当作当前课程已验证有效的证据。
 
 ## 使用规则
 

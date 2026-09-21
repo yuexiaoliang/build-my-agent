@@ -1,11 +1,28 @@
 {
   "version": 2,
-  "updatedAt": "2026-09-20",
-  "currentUnit": "S1.1",
+  "updatedAt": "2026-09-21",
+  "currentUnit": "H0.1",
   "completedUnits": [],
-  "evidence": [],
+  "evidence": [
+    {
+      "unit": "S1.1",
+      "concept": "输入校验应位于自己的服务端边界，并在调用模型 Provider 前执行",
+      "date": "2026-09-20",
+      "support": "prompted",
+      "observation": "在给出浏览器、服务端、Model Provider 三层选项后，学习者正确判断空输入应由服务端拒绝；此前已注意到上下文控制，但尚未精确对应当前实现。",
+      "source": "本线程问答；harness/src/server.ts 的 validateInput；harness/test/server.test.ts 的空输入反例"
+    },
+    {
+      "unit": "S1.1",
+      "concept": "用 Model Provider 隔离模型供应商实现，使浏览器和服务端业务边界保持稳定",
+      "date": "2026-09-21",
+      "support": "prompted",
+      "observation": "学习者选择替换 ModelProvider，并解释其作为桥梁可封装通用接口、扩展其他模型；需要继续区分供应商适配逻辑与服务端业务通用逻辑。",
+      "source": "本线程迁移题；harness/src/model-provider.ts 的 ModelProvider 接口与 SyntheticSummaryProvider 实现"
+    }
+  ],
   "blockers": [],
-  "nextAction": "在本地从一个足够小的 AI 应用需求开始；先检查当前小步环境与模型条件，再逐步建立实现和证据。",
+  "nextAction": "按 H0.1 准备一次最小 Harness 的完整运行，先核对当前小任务与实际模型条件，再沿工具提议、程序执行、结果回传和停止观察一个变化；熟悉的前端知识略过基础讲解。本次仅迁移续学导航，H0.1 尚未备课、授课或完成。",
   "context": {
     "background": "有前端开发经验，未来希望走 AI 应用方向",
     "programGoal": "系统掌握 AI Application Engineering 的主要技术面；Agent Harness 作为重点技术纵深",

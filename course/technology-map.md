@@ -1,27 +1,29 @@
 # AI 应用工程技术覆盖地图
 
-本课程的总目标是 **AI Application Engineering**；**Agent Harness 是重点技术纵深，不是全部课程本身**。
+Harness 是整体入口和重点纵深；总目标仍是完整的 AI Application Engineering。知识组和编号不代表先后顺序，RAG、多模态、Realtime 等保留独立机制与实验。
 
-这张地图回答“主要技术面有没有正式学习落点”。单元标签和依赖以 [catalog.json](catalog.json) 为准；本页用于人类快速检查，不把某个 SDK 或模型名称当长期课程结构。
+本页用于核对覆盖，单元归属以 [catalog.json](catalog.json) 的 domains 为准；个人进度只在 `.learning/state.json`。表中列出专门学习落点，跨域 Capstone 与陌生迁移另在 S8.3、S8.4。
 
-| 技术域 | 课程中的核心内容 | 主要单元 |
+| 技术域 | 需要真正验证的内容 | 专门学习落点 |
 |---|---|---|
-| 模型 API 与生成基础 | messages/prompt、上下文窗口、Structured Output、运行时校验 | S1.1、S1.2、S1.3、S1.4、S2.4、S3.2、S5.1、S7.1、S7.4、S8.3、S8.4 |
-| AI UX | streaming、partial/error/cancel 状态、审批与多模态交互 | S1.4、S4.4、S5.2、S5.3、S5.4、S8.3 |
-| RAG / Context Engineering | keyword/vector/hybrid、embedding、chunking、metadata、rerank、citations、context assembly | S2.1、S2.2、S2.3、S2.4、S4.2、S8.3、S8.4 |
-| Agent Harness | tools、loop、state、budget、workflow、planning、subagent、recovery | S3.1、S3.2、S3.3、S3.4、S4.1、S4.3、S4.4、S5.3、S8.3、S8.4 |
-| 安全与数据边界 | auth、RBAC、multi-tenancy、prompt injection、approval、sandbox、secret | S1.3、S2.2、S3.1、S3.4、S4.1、S4.2、S4.3、S4.4、S5.4、S6.2、S6.3、S7.2、S8.1、S8.2、S8.3、S8.4 |
-| 多模态与 Realtime | vision、document、STT/TTS、WebRTC/WebSocket、interrupt、fallback | S5.1、S5.2、S5.3、S5.4、S8.3、S8.4 |
-| Evals | task set、grader、regression、human review、A/B、ablation | S2.3、S2.4、S3.3、S6.1、S6.2、S6.4、S7.1、S7.3、S7.4、S8.3、S8.4 |
-| Observability | trace/span、metrics、token、cost、latency、failure diagnosis | S6.3、S6.4、S7.3、S8.2、S8.3、S8.4 |
-| 模型与性能优化 | model selection、routing、fallback、caching、batching、fine-tuning 决策基础 | S2.4、S3.2、S6.4、S7.1、S7.2、S7.3、S7.4、S8.3、S8.4 |
-| AI Backend / Production | DB、object storage、queue、webhook、background job、deploy、quota、ops | S1.1、S4.1、S4.2、S4.4、S6.3、S7.2、S7.3、S8.1、S8.2、S8.3、S8.4 |
-| MCP / 生态 | MCP、provider adapter、外部工具集成与协议边界 | S3.4、S8.3、S8.4 |
+| 模型 API、Prompt、Structured Output 与上下文基础 | 真实模型调用、消息/上下文、结构约束与语义/业务校验 | H0.1、S1.2、S1.3、S1.4、S2.4、S3.2、S3.5、S5.1、S7.1、S7.4 |
+| AI 前端交互、Streaming 与状态 | 部分结果、错误、取消确认、审批、媒体交互与任务反馈 | S1.4、S4.4、S5.2、S5.3、S5.4、S8.5 |
+| RAG、检索与 Context Engineering | lexical/vector/hybrid、切分、排序、引用、上下文和资料生命周期 | S2.1、S2.2、S2.3、S2.4、S2.5、S4.2 |
+| Tools、Agent 与 Harness | 提议/执行、结果关联、循环/预算、状态/记忆、规划/委派与恢复 | H0.1、S3.1、S3.2、S3.5、S3.3、S3.6、S3.7、S3.4、S4.1、S4.3、S4.4 |
+| 安全、权限、隔离与数据边界 | 身份、租户、检索/工具权限、注入、参数审批与隔离 | H0.1、S1.3、S2.2、S2.5、S3.1、S3.5、S3.7、S3.4、S4.1、S4.2、S4.3、S4.4、S5.4、S6.2、S6.3、S7.2、S8.1、S8.2 |
+| Vision、Document、Audio 与 Realtime | 图像/文档、STT/TTS、实时媒体、打断和降级 | S5.1、S5.2、S5.3、S5.4 |
+| Evals、实验与回归 | 成功条件、任务集、评分器校验、保留样例、回归和对照实验 | H0.1、S2.3、S2.4、S3.3、S3.6、S3.7、S6.1、S6.2、S6.4、S7.1、S7.3、S7.4、S8.5 |
+| Tracing、Metrics 与故障诊断 | 从入口的必要记录到 trace/span、指标、版本与故障诊断 | H0.1、S6.3、S6.4、S7.3、S8.2、S8.5 |
+| 模型选择、Routing、缓存、成本与性能 | 模型选择、routing/fallback、缓存、性能与模型适配决策 | S2.4、S3.2、S3.6、S3.7、S6.4、S7.1、S7.2、S7.3、S7.4、S8.5 |
+| AI Backend、异步任务与生产交付 | 按需存储/队列、幂等、后台任务、部署、试用、监控与回退 | S2.5、S4.1、S4.2、S4.4、S6.3、S7.2、S7.3、S8.1、S8.2、S8.5 |
+| MCP、Provider Adapter 与生态集成 | MCP、Provider/tool adapter、协议与 SDK 的业务边界 | S3.4 |
 
-## 覆盖口径
+## 覆盖和深度
 
-“覆盖”不等于把所有厂商产品和框架逐一学完。课程要求掌握稳定的工程问题、协议边界、验证方法和至少一次真实实现；具体 SDK 在本地学习时按当时生态选择。
+从 H0.1 就使用最小成功条件和运行记录；S6 深入可重复评测、评分器和系统追踪。权限和必要后端机制随当前能力一起引入，不能等到某个编号才开始控制。
 
-主线会涉及 fine-tuning、蒸馏、合成数据的**决策基础和小规模实验条件**，但不把 CUDA、分布式训练、模型预训练、推理内核等模型工程/ML Systems 深度作为毕业前置。它们是另一条专业纵深。
+Harness 的工具、循环/预算、状态/记忆、规划、委派分别拆解；新增机制允许因没有收益而不进入主产品。RAG 必须同时核对检索与回答，资料更新/删除后还要核对索引、引用和缓存。基础媒体任务无需完整 Harness 前置。
 
-毕业时至少要留下：一个完整 AI Web 产品、一条可评测 RAG 链路、一个自己构建的 Harness、一次多模态/Realtime 实践、一套 eval + trace 证据、一次生产部署，以及一个陌生需求迁移说明。
+主产品和专项实验共同覆盖课程，单个 Capstone 的广泛 domains 标签不自动证明所有领域已掌握。每个领域需要实际作品和可解释证据；具体毕业证据见 [能力验收](assessment.md)。
+
+模型预训练、CUDA、分布式训练和推理内核属于其他专业纵深。fine-tuning、蒸馏、合成数据保留决策基础，小规模训练实验按条件进行。具体供应商和 SDK 在学习时核对当前官方文档。
